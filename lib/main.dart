@@ -1,21 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:moon_manifest/app.dart';
+import 'package:moon_manifest/providers/settings_provider.dart';
+import 'package:moon_manifest/theme/app_theme.dart';
+import 'package:moon_manifest/core/notifications/notification_service.dart';
 
-void main() {
-  runApp(const ProviderScope(child: MoonManifestApp()));
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarBrightness: Brightness.dark,
+    statusBarIconBrightness: Brightness.light,
+  ));
+
+  final prefs = await SharedPreferences.getInstance();
+  await NotificationService.initialize();
+  await NotificationService.requestPermissions();
+
+  runApp(
+    ProviderScope(
+      overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
+      child: const MoonManifestApp(),
+    ),
+  );
 }
 
-class MoonManifestApp extends StatelessWidget {
+class MoonManifestApp extends ConsumerWidget {
   const MoonManifestApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
+    return MaterialApp.router(
       title: 'MoonManifest',
-      theme: ThemeData.dark(),
-      home: const Scaffold(
-        body: Center(child: Text('MoonManifest')),
-      ),
+      theme: AppTheme.dark,
+      routerConfig: router,
+      debugShowCheckedModeBanner: false,
     );
   }
 }
