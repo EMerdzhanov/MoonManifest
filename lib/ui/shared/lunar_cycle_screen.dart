@@ -467,25 +467,22 @@ class _CycleDiagramPainter extends CustomPainter {
 
   void _drawMoon(Canvas canvas, Offset center, double radius,
       double illumination, bool isWaxing) {
-    // Dark base
+    // Visible dark side — a blue-grey that's lighter than the background
+    // so the full disc is always visible (like the reference image)
+    const darkSideColor = Color(0xFF252D45);
+    canvas.drawCircle(center, radius, Paint()..color = darkSideColor);
+
+    // Subtle edge outline for definition
     canvas.drawCircle(
       center,
       radius,
-      Paint()..color = AppColors.darkNavy,
+      Paint()
+        ..color = const Color(0xFF3A4260)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.5,
     );
 
-    if (illumination <= 0.01) {
-      // Draw a subtle outline so the new moon is visible
-      canvas.drawCircle(
-        center,
-        radius,
-        Paint()
-          ..color = AppColors.textMuted.withValues(alpha: 0.4)
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 1.0,
-      );
-      return;
-    }
+    if (illumination <= 0.01) return;
 
     final litPaint = Paint()..color = AppColors.moonSilver;
 
