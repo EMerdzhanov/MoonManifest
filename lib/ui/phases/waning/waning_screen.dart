@@ -6,6 +6,7 @@ import 'package:moon_manifest/providers/lunar_state_provider.dart';
 import 'package:moon_manifest/theme/app_colors.dart';
 import 'package:moon_manifest/ui/shared/calm_scaffold.dart';
 import 'package:moon_manifest/ui/shared/moon_phase_indicator.dart';
+import 'package:moon_manifest/ui/phases/waning/manifestation_philosophy_screen.dart';
 
 class WaningScreen extends ConsumerWidget {
   const WaningScreen({super.key});
@@ -40,7 +41,11 @@ class WaningScreen extends ConsumerWidget {
                 const SizedBox(height: 16),
                 // Tappable banner
                 GestureDetector(
-                  onTap: () => context.push('/philosophy'),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const ManifestationPhilosophyScreen(),
+                    ),
+                  ),
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(
@@ -139,7 +144,11 @@ class WaningScreen extends ConsumerWidget {
                 ),
                 const Spacer(flex: 4),
                 GestureDetector(
-                  onTap: () => context.push('/philosophy'),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const ManifestationPhilosophyScreen(),
+                    ),
+                  ),
                   child: Text(
                     'Why is it quiet?',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
