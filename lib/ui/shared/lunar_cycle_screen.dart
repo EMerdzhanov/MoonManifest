@@ -346,24 +346,43 @@ class _CycleDiagramPainter extends CustomPainter {
     final orbitRadius = math.min(size.width, size.height) / 2 - 70;
     const moonRadius = 22.0;
 
-    // Draw clean dashed orbit circle
+    // Draw solid inner orbit circle
+    final innerRadius = orbitRadius - moonRadius - 10;
     final orbitPaint = Paint()
-      ..color = AppColors.textMuted.withValues(alpha: 0.25)
+      ..color = AppColors.textMuted.withValues(alpha: 0.2)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
+    canvas.drawCircle(center, innerRadius, orbitPaint);
 
-    const dashCount = 40;
-    const dashGapRatio = 0.5; // half dash, half gap
-    for (var i = 0; i < dashCount; i++) {
-      final startAngle = (i / dashCount) * 2 * math.pi;
-      final sweepAngle = (dashGapRatio / dashCount) * 2 * math.pi;
-      canvas.drawArc(
-        Rect.fromCircle(center: center, radius: orbitRadius),
-        startAngle,
-        sweepAngle,
-        false,
-        orbitPaint,
-      );
+    // Draw directional arrows (clockwise) on the inner orbit
+    const arrowCount = 4;
+    final arrowPaint = Paint()
+      ..color = AppColors.textMuted.withValues(alpha: 0.4)
+      ..style = PaintingStyle.fill;
+
+    for (var i = 0; i < arrowCount; i++) {
+      // Position arrows between the moon phases (at 45° offsets)
+      final angle = (i / arrowCount) * 2 * math.pi - math.pi / 4;
+      final ax = center.dx + innerRadius * math.cos(angle);
+      final ay = center.dy + innerRadius * math.sin(angle);
+
+      // Arrow points in the clockwise tangent direction
+      final tangentAngle = angle + math.pi / 2;
+      const arrowSize = 5.0;
+
+      final tipX = ax + arrowSize * math.cos(tangentAngle);
+      final tipY = ay + arrowSize * math.sin(tangentAngle);
+      final leftX = ax + arrowSize * math.cos(tangentAngle + 2.5);
+      final leftY = ay + arrowSize * math.sin(tangentAngle + 2.5);
+      final rightX = ax + arrowSize * math.cos(tangentAngle - 2.5);
+      final rightY = ay + arrowSize * math.sin(tangentAngle - 2.5);
+
+      final arrowPath = Path()
+        ..moveTo(tipX, tipY)
+        ..lineTo(leftX, leftY)
+        ..lineTo(rightX, rightY)
+        ..close();
+      canvas.drawPath(arrowPath, arrowPaint);
     }
 
     // Draw each moon phase around the circle
