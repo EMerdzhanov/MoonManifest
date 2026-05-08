@@ -544,17 +544,29 @@ class _CycleDiagramPainter extends CustomPainter {
       );
       textPainter.layout(maxWidth: 80);
 
-      // Push labels further out from the moons
-      final labelRadius = orbitRadius + moonRadius + 22;
+      // Push labels out from moons. Diagonal positions (indices 1,3,5,7)
+      // need more offset because multi-line text overlaps at 45°.
+      final isDiagonal = i % 2 == 1;
+      final labelRadius = orbitRadius + moonRadius + (isDiagonal ? 30 : 22);
       final labelX = center.dx + labelRadius * math.cos(angle);
       final labelY = center.dy + labelRadius * math.sin(angle);
-      textPainter.paint(
-        canvas,
-        Offset(
-          labelX - textPainter.width / 2,
-          labelY - textPainter.height / 2,
-        ),
-      );
+
+      // For left-side labels, align right edge toward moon; right-side, align left edge
+      double offsetX = labelX - textPainter.width / 2;
+      double offsetY = labelY - textPainter.height / 2;
+
+      // Nudge diagonal labels outward to avoid overlap
+      if (isDiagonal) {
+        if (angle > 0 && angle < math.pi) {
+          // Bottom half — push label down
+          offsetY += 4;
+        } else {
+          // Top half — push label up
+          offsetY -= 4;
+        }
+      }
+
+      textPainter.paint(canvas, Offset(offsetX, offsetY));
     }
   }
 
