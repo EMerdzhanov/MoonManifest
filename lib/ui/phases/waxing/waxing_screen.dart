@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:moon_manifest/providers/cycle_provider.dart';
@@ -7,11 +8,62 @@ import 'package:moon_manifest/theme/app_colors.dart';
 import 'package:moon_manifest/ui/shared/calm_scaffold.dart';
 import 'package:moon_manifest/ui/shared/moon_phase_indicator.dart';
 
-class WaxingScreen extends ConsumerWidget {
+class WaxingScreen extends ConsumerStatefulWidget {
   const WaxingScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<WaxingScreen> createState() => _WaxingScreenState();
+}
+
+class _WaxingScreenState extends ConsumerState<WaxingScreen>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _breathController;
+  late final Animation<double> _breathAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _breathController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 3),
+    )..repeat(reverse: true);
+
+    _breathAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
+      CurvedAnimation(parent: _breathController, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _breathController.dispose();
+    super.dispose();
+  }
+
+  void _showFocusOverlay(BuildContext context, String intentionText) {
+    HapticFeedback.lightImpact();
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'Dismiss focus overlay',
+      barrierColor: Colors.transparent,
+      pageBuilder: (dialogContext, animation, secondaryAnimation) {
+        return _FocusOverlay(
+          intentionText: intentionText,
+          breathAnimation: _breathAnimation,
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(
+          opacity: CurvedAnimation(parent: animation, curve: Curves.easeIn),
+          child: child,
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 300),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final lunarAsync = ref.watch(lunarStateProvider);
     final cycleAsync = ref.watch(activeCycleProvider);
 
@@ -32,6 +84,12 @@ class WaxingScreen extends ConsumerWidget {
           final now = DateTime.now();
           final daysUntilFull =
               lunarState.nextFullMoon.difference(now).inDays;
+
+          final totalDays = lunarState.totalDaysInPhase > 0
+              ? lunarState.totalDaysInPhase
+              : 15;
+          final progress =
+              (lunarState.dayInPhase / totalDays).clamp(0.0, 1.0);
 
           return SingleChildScrollView(
             padding:
@@ -63,6 +121,32 @@ class WaxingScreen extends ConsumerWidget {
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: AppColors.mutedGold,
                       ),
+                ),
+                const SizedBox(height: 12),
+                // Progress bar toward full moon
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    return Container(
+                      width: constraints.maxWidth,
+                      height: 3,
+                      decoration: BoxDecoration(
+                        color: AppColors.mutedGold.withValues(alpha: 0.3),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: FractionallySizedBox(
+                          widthFactor: progress,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.mutedGold,
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 40),
                 Align(
@@ -111,38 +195,42 @@ class WaxingScreen extends ConsumerWidget {
                           .map(
                             (intention) => Padding(
                               padding: const EdgeInsets.only(bottom: 10),
-                              child: Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 14),
-                                decoration: BoxDecoration(
-                                  color: AppColors.cardDark,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: AppColors.mutedGold
-                                        .withValues(alpha: 0.2),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    const Icon(
-                                        Icons.brightness_2_outlined,
-                                        color: AppColors.mutedGold,
-                                        size: 16),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Text(
-                                        intention.text,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge
-                                            ?.copyWith(
-                                              color: AppColors.textPrimary,
-                                            ),
-                                      ),
+                              child: GestureDetector(
+                                onTap: () => _showFocusOverlay(
+                                    context, intention.text),
+                                child: Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 14),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.cardDark,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: AppColors.mutedGold
+                                          .withValues(alpha: 0.2),
+                                      width: 1,
                                     ),
-                                  ],
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      const Icon(
+                                          Icons.brightness_2_outlined,
+                                          color: AppColors.mutedGold,
+                                          size: 16),
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: Text(
+                                          intention.text,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge
+                                              ?.copyWith(
+                                                color: AppColors.textPrimary,
+                                              ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -156,6 +244,53 @@ class WaxingScreen extends ConsumerWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _FocusOverlay extends StatelessWidget {
+  const _FocusOverlay({
+    required this.intentionText,
+    required this.breathAnimation,
+  });
+
+  final String intentionText;
+  final Animation<double> breathAnimation;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => Navigator.of(context).pop(),
+      child: Material(
+        color: AppColors.deepIndigo.withValues(alpha: 0.92),
+        child: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: AnimatedBuilder(
+                animation: breathAnimation,
+                builder: (context, child) {
+                  return Transform.scale(
+                    scale: breathAnimation.value,
+                    child: child,
+                  );
+                },
+                child: Text(
+                  intentionText,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontFamily: 'CormorantGaramond',
+                    fontSize: 32,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.mutedGold,
+                    height: 1.5,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
