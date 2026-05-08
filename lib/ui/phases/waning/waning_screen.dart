@@ -51,10 +51,10 @@ class WaningScreen extends ConsumerWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 14),
                     decoration: BoxDecoration(
-                      color: AppColors.cardDark,
+                      color: AppColors.closedAmberDim,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: AppColors.mutedGold.withValues(alpha: 0.25),
+                        color: AppColors.closedAmber.withValues(alpha: 0.3),
                       ),
                     ),
                     child: Row(
@@ -64,7 +64,7 @@ class WaningScreen extends ConsumerWidget {
                           height: 8,
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
-                            color: AppColors.textMuted,
+                            color: AppColors.closedAmber,
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -78,8 +78,8 @@ class WaningScreen extends ConsumerWidget {
                                     .textTheme
                                     .bodyMedium
                                     ?.copyWith(
-                                      color: AppColors.textPrimary,
-                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.closedAmber,
+                                      fontWeight: FontWeight.w600,
                                     ),
                               ),
                               const SizedBox(height: 2),
@@ -89,15 +89,15 @@ class WaningScreen extends ConsumerWidget {
                                     .textTheme
                                     .bodySmall
                                     ?.copyWith(
-                                      color: AppColors.textMuted,
+                                      color: AppColors.closedAmber.withValues(alpha: 0.7),
                                     ),
                               ),
                             ],
                           ),
                         ),
-                        const Icon(
+                        Icon(
                           Icons.chevron_right,
-                          color: AppColors.textMuted,
+                          color: AppColors.closedAmber.withValues(alpha: 0.5),
                           size: 20,
                         ),
                       ],
@@ -134,12 +134,21 @@ class WaningScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 40),
                 Text(
-                  'Next new moon: $formattedDate',
+                  'Next new moon',
                   textAlign: TextAlign.center,
                   style:
-                      Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: AppColors.textMuted,
-                            letterSpacing: 0.6,
+                          ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  formattedDate,
+                  textAlign: TextAlign.center,
+                  style:
+                      Theme.of(context).textTheme.displaySmall?.copyWith(
+                            color: AppColors.mutedGold,
+                            fontWeight: FontWeight.w600,
                           ),
                 ),
                 const Spacer(flex: 4),

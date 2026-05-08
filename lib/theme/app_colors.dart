@@ -24,6 +24,10 @@ class AppColors {
   static const textSecondary = Color(0xFF9098B8);
   static const textMuted = Color(0xFF5A6280);
 
+  // Status
+  static const closedAmber = Color(0xFFE8845A);
+  static const closedAmberDim = Color(0x30E8845A);
+
   // Functional
   static const surface = Color(0xFF1A2040);
   static const error = Color(0xFFCF6679);
