@@ -552,13 +552,13 @@ class _CycleDiagramPainter extends CustomPainter {
         // First Quarter (right) — label just right of moon
         final moonX = center.dx + orbitRadius * math.cos(angle);
         final moonY = center.dy + orbitRadius * math.sin(angle);
-        offsetX = moonX + moonRadius + 6;
+        offsetX = moonX + moonRadius + 14;
         offsetY = moonY - textPainter.height / 2;
       } else if (i == 6) {
         // Last Quarter (left) — label just left of moon
         final moonX = center.dx + orbitRadius * math.cos(angle);
         final moonY = center.dy + orbitRadius * math.sin(angle);
-        offsetX = moonX - moonRadius - textPainter.width - 6;
+        offsetX = moonX - moonRadius - textPainter.width - 14;
         offsetY = moonY - textPainter.height / 2;
       } else {
         final labelRadius = orbitRadius + moonRadius + 24;
