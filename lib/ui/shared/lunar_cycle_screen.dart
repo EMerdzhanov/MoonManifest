@@ -491,32 +491,75 @@ class _CycleDiagramPainter extends CustomPainter {
       return;
     }
 
-    final path = Path();
-    final startAngle = isWaxing ? -math.pi / 2 : math.pi / 2;
-    path.addArc(
-        Rect.fromCircle(center: center, radius: radius), startAngle, math.pi);
-
-    final terminatorXRadius = radius * (1 - 2 * illumination).abs();
+    // The terminator is an ellipse whose x-radius shrinks as illumination
+    // moves away from 0.5 (half moon). At 0.5, it's a straight line (x=0).
+    // At 0.25 (crescent), it curves into the lit side creating a thin sliver.
+    // At 0.75 (gibbous), it curves into the dark side.
+    final terminatorXRadius = radius * (2 * illumination - 1).abs();
     final isGibbous = illumination > 0.5;
 
+    final path = Path();
+
+    // For waxing: lit side is on the RIGHT
+    // For waning: lit side is on the LEFT
+    //
+    // Strategy: trace the outer circle arc on the lit side (top to bottom),
+    // then trace back along the terminator ellipse (bottom to top).
+    // This creates a single closed path = the lit crescent/gibbous shape.
+
     if (isWaxing) {
+      // Outer arc: right half of circle, from top to bottom (clockwise)
       path.addArc(
-        Rect.fromCenter(
-            center: center,
-            width: terminatorXRadius * 2,
-            height: radius * 2),
-        isGibbous ? math.pi / 2 : -math.pi / 2,
-        math.pi,
+        Rect.fromCircle(center: center, radius: radius),
+        -math.pi / 2, // start at top
+        math.pi, // sweep to bottom (right side)
       );
+      // Terminator arc: back from bottom to top
+      if (isGibbous) {
+        // Gibbous: terminator curves LEFT (into dark side)
+        // Arc from bottom to top along LEFT side of ellipse
+        path.arcTo(
+          Rect.fromCenter(center: center, width: terminatorXRadius * 2, height: radius * 2),
+          math.pi / 2, // start at bottom
+          math.pi, // sweep back to top (left side of ellipse)
+          false,
+        );
+      } else {
+        // Crescent: terminator curves RIGHT (into lit side, narrowing it)
+        // Arc from bottom to top along RIGHT side of ellipse
+        path.arcTo(
+          Rect.fromCenter(center: center, width: terminatorXRadius * 2, height: radius * 2),
+          math.pi / 2, // start at bottom
+          -math.pi, // sweep back to top (right side of ellipse = negative sweep)
+          false,
+        );
+      }
     } else {
+      // Waning: lit side is on the LEFT
+      // Outer arc: left half of circle, from top to bottom (counter-clockwise)
       path.addArc(
-        Rect.fromCenter(
-            center: center,
-            width: terminatorXRadius * 2,
-            height: radius * 2),
-        isGibbous ? -math.pi / 2 : math.pi / 2,
-        math.pi,
+        Rect.fromCircle(center: center, radius: radius),
+        -math.pi / 2, // start at top
+        -math.pi, // sweep to bottom (left side)
       );
+      // Terminator arc: back from bottom to top
+      if (isGibbous) {
+        // Gibbous: terminator curves RIGHT (into dark side)
+        path.arcTo(
+          Rect.fromCenter(center: center, width: terminatorXRadius * 2, height: radius * 2),
+          math.pi / 2, // start at bottom
+          -math.pi, // sweep back to top (right side of ellipse)
+          false,
+        );
+      } else {
+        // Crescent: terminator curves LEFT (into lit side, narrowing it)
+        path.arcTo(
+          Rect.fromCenter(center: center, width: terminatorXRadius * 2, height: radius * 2),
+          math.pi / 2, // start at bottom
+          math.pi, // sweep back to top (left side of ellipse)
+          false,
+        );
+      }
     }
 
     path.close();
