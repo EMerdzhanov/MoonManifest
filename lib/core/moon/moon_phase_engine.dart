@@ -1,3 +1,4 @@
+// ignore_for_file: non_constant_identifier_names
 import 'dart:math';
 
 import 'package:moon_manifest/core/moon/moon_constants.dart';
