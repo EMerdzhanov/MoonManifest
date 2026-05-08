@@ -46,7 +46,7 @@ class LunarCycleScreen extends ConsumerWidget {
 
                   // Circular moon phase diagram
                   SizedBox(
-                    height: 420,
+                    height: 440,
                     child: CustomPaint(
                       painter: _CycleDiagramPainter(
                         currentPhase: state.phase,
@@ -343,13 +343,13 @@ class _CycleDiagramPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
-    final orbitRadius = math.min(size.width, size.height) / 2 - 70;
-    const moonRadius = 22.0;
+    final orbitRadius = math.min(size.width, size.height) / 2 - 65;
+    const moonRadius = 20.0;
 
     // Draw inner orbit as two colored arcs:
     // Green (manifest) = New Moon → Full Moon (right/clockwise, top to bottom)
     // Amber (release) = Full Moon → New Moon (left/clockwise, bottom to top)
-    final innerRadius = orbitRadius - moonRadius - 10;
+    final innerRadius = orbitRadius - moonRadius - 24;
     const manifestColor = Color(0xFF4A9E6B); // soft green
     const releaseColor = Color(0xFF7B8CBA);  // soft blue
 
@@ -417,12 +417,12 @@ class _CycleDiagramPainter extends CustomPainter {
     // "MANIFEST" on the inside of the right (green) arc
     // Right arc goes from -π/2 (top) to π/2 (bottom)
     drawCurvedText(
-        'MANIFEST', -math.pi / 2, math.pi, innerRadius - 14, manifestColor);
+        'MANIFEST', -math.pi / 2, math.pi, innerRadius - 16, manifestColor);
 
     // "RELEASE" on the inside of the left (blue) arc
     // Left arc goes from π/2 (bottom) to 3π/2 (top)
     drawCurvedText(
-        'RELEASE', math.pi / 2, math.pi, innerRadius - 14, releaseColor);
+        'RELEASE', math.pi / 2, math.pi, innerRadius - 16, releaseColor);
 
     // Directional arrows — larger and more visible
     void drawArrow(double angle, Color color) {
