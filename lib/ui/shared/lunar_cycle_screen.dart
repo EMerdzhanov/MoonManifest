@@ -534,7 +534,7 @@ class _CycleDiagramPainter extends CustomPainter {
             color: isCurrent
                 ? AppColors.textPrimary
                 : AppColors.textSecondary.withValues(alpha: 0.8),
-            fontSize: isCurrent ? 13 : 12,
+            fontSize: isCurrent ? 11 : 10,
             fontWeight: isCurrent ? FontWeight.w600 : FontWeight.w400,
             height: 1.3,
           ),
@@ -544,20 +544,22 @@ class _CycleDiagramPainter extends CustomPainter {
       );
       textPainter.layout(maxWidth: 80);
 
-      // Position labels clear of moons.
-      // Left/right moons (indices 2, 6) get labels above/below to stay in frame.
-      // All others get labels pushed radially outward.
+      // Position labels to the side for left/right, radially outward for others.
       double offsetX;
       double offsetY;
 
       if (i == 2) {
-        // First Quarter (right) — label below the moon
-        offsetX = center.dx + orbitRadius * math.cos(angle) - textPainter.width / 2;
-        offsetY = center.dy + orbitRadius * math.sin(angle) + moonRadius + 6;
+        // First Quarter (right) — label just right of moon
+        final moonX = center.dx + orbitRadius * math.cos(angle);
+        final moonY = center.dy + orbitRadius * math.sin(angle);
+        offsetX = moonX + moonRadius + 6;
+        offsetY = moonY - textPainter.height / 2;
       } else if (i == 6) {
-        // Last Quarter (left) — label above the moon
-        offsetX = center.dx + orbitRadius * math.cos(angle) - textPainter.width / 2;
-        offsetY = center.dy + orbitRadius * math.sin(angle) - moonRadius - textPainter.height - 6;
+        // Last Quarter (left) — label just left of moon
+        final moonX = center.dx + orbitRadius * math.cos(angle);
+        final moonY = center.dy + orbitRadius * math.sin(angle);
+        offsetX = moonX - moonRadius - textPainter.width - 6;
+        offsetY = moonY - textPainter.height / 2;
       } else {
         final labelRadius = orbitRadius + moonRadius + 24;
         final labelX = center.dx + labelRadius * math.cos(angle);
