@@ -96,22 +96,40 @@ class _ManifestationPhilosophyScreenState
                 children: [
                   const SizedBox(height: 8),
 
-                  // ── THE CLOSED WINDOW (first — answers their question) ──
-                  _heading(context, 'The Window Is Closed'),
+                  // ── WHY THE WINDOW IS CLOSED ──
+                  Center(
+                    child: Text(
+                      'Why Is the Window\nClosed Right Now?',
+                      style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                            color: AppColors.textPrimary,
+                            height: 1.3,
+                          ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  _body(context,
+                      'Manifestation doesn\'t work on your schedule — it works on the moon\'s. '
+                      'The lunar cycle has specific windows where setting intentions is powerful, '
+                      'and periods where the most powerful thing you can do is nothing.'),
 
                   const SizedBox(height: 16),
 
                   _body(context,
-                      'You are here now, in the silence. The manifestation window is closed — '
-                      'not because you have failed, but because this is where the practice '
-                      'proves itself. Restraint is not absence. It is concentrated power.'),
+                      'Right now, the moon is waning — shrinking toward darkness. '
+                      'This is the release phase. Your intentions from this cycle have been planted, '
+                      'tended, and offered in gratitude. Now they need space to take root. '
+                      'Pushing harder during this phase doesn\'t help. It interferes.'),
 
                   const SizedBox(height: 16),
 
                   _body(context,
-                      'Every day you wait, your next intention grows sharper. '
-                      'Every day you resist the urge to force an outcome, '
-                      'you build the trust that makes manifestation possible.'),
+                      'When the new moon arrives, the window opens again. '
+                      'That\'s when you set fresh intentions and begin a new cycle. '
+                      'The wait isn\'t wasted time — it\'s part of the practice. '
+                      'The discipline of release is what separates manifestation from wishing.'),
 
                   const SizedBox(height: 28),
 
