@@ -56,9 +56,9 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
           ),
         ),
         data: (state) {
-          final now = DateTime.now();
+          final engine = ref.read(moonPhaseEngineProvider);
           final nextNewMoon = state.nextNewMoon;
-          final daysUntil = nextNewMoon.difference(now).inDays;
+          final daysUntil = nextNewMoon.difference(engine.now).inDays;
           final formattedDate =
               DateFormat('MMMM d').format(nextNewMoon);
 

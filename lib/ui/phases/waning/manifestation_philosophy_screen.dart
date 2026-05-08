@@ -87,7 +87,7 @@ class _ManifestationPhilosophyScreenState
             final nextNewMoon = state.nextNewMoon.toLocal();
             final dateStr = DateFormat('MMMM d').format(nextNewMoon);
             final daysUntil =
-                state.nextNewMoon.difference(DateTime.now().toUtc()).inDays;
+                state.nextNewMoon.difference(ref.read(moonPhaseEngineProvider).now).inDays;
 
             return SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 28),

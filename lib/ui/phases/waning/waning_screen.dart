@@ -31,8 +31,9 @@ class WaningScreen extends ConsumerWidget {
         data: (state) {
           final formattedDate =
               DateFormat('MMMM d').format(state.nextNewMoon);
+          final engine = ref.read(moonPhaseEngineProvider);
           final daysUntil =
-              state.nextNewMoon.difference(DateTime.now().toUtc()).inDays;
+              state.nextNewMoon.difference(engine.now).inDays;
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32),

@@ -81,9 +81,9 @@ class _WaxingScreenState extends ConsumerState<WaxingScreen>
           ),
         ),
         data: (lunarState) {
-          final now = DateTime.now();
+          final engine = ref.read(moonPhaseEngineProvider);
           final daysUntilFull =
-              lunarState.nextFullMoon.difference(now).inDays;
+              lunarState.nextFullMoon.difference(engine.now).inDays;
 
           final totalDays = lunarState.totalDaysInPhase > 0
               ? lunarState.totalDaysInPhase
