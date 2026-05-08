@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -111,11 +112,13 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
     await ref.read(activeCycleProvider.notifier).addGratitude(gratitude);
 
     if (_currentIntentionIndex < intentions.length - 1) {
+      await HapticFeedback.lightImpact();
       setState(() {
         _currentIntentionIndex++;
         _gratitudeController.clear();
       });
     } else {
+      await HapticFeedback.heavyImpact();
       await ref.read(activeCycleProvider.notifier).completeGratitude();
     }
   }

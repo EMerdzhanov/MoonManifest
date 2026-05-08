@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -8,6 +9,7 @@ import 'package:moon_manifest/providers/cycle_provider.dart';
 import 'package:moon_manifest/providers/lunar_state_provider.dart';
 import 'package:moon_manifest/theme/app_colors.dart';
 import 'package:moon_manifest/ui/shared/calm_scaffold.dart';
+import 'package:moon_manifest/ui/shared/manifestation_guide_screen.dart';
 import 'package:moon_manifest/ui/shared/moon_phase_indicator.dart';
 
 class NewMoonScreen extends ConsumerStatefulWidget {
@@ -70,6 +72,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
             ))
         .toList();
 
+    await HapticFeedback.mediumImpact();
     await ref.read(activeCycleProvider.notifier).startCycle(
           id: now.millisecondsSinceEpoch.toString(),
           newMoonDate: phaseInfo.phaseStart,
@@ -181,7 +184,30 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
                   ),
             ),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 16),
+          GestureDetector(
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const ManifestationGuideScreen()),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.auto_awesome, size: 14, color: AppColors.mutedGold.withValues(alpha: 0.7)),
+                const SizedBox(width: 6),
+                Text(
+                  'How to write powerful intentions',
+                  style: TextStyle(
+                    color: AppColors.mutedGold.withValues(alpha: 0.7),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    decoration: TextDecoration.underline,
+                    decorationColor: AppColors.mutedGold.withValues(alpha: 0.4),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
