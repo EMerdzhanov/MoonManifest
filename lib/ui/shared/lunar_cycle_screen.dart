@@ -152,6 +152,8 @@ class _LunarCycleScreenState extends ConsumerState<LunarCycleScreen>
                     title: 'New Moon — Plant',
                     description:
                         'Set your intentions. Name what you truly need. This is where the cycle begins.',
+                    duration: '~1 day',
+                    status: 'Intentions open',
                     isActive: true,
                     isCurrent: state.phase == MoonPhase.newMoon,
                   ),
@@ -161,6 +163,8 @@ class _LunarCycleScreenState extends ConsumerState<LunarCycleScreen>
                     title: 'Waxing — Tend',
                     description:
                         'Repeat your intentions daily. Build belief through repetition. The moon grows, and so does your conviction.',
+                    duration: '~14 days',
+                    status: 'Daily reminders active',
                     isActive: true,
                     isCurrent: state.phase == MoonPhase.waxing,
                   ),
@@ -170,6 +174,8 @@ class _LunarCycleScreenState extends ConsumerState<LunarCycleScreen>
                     title: 'Full Moon — Give Thanks',
                     description:
                         'Express gratitude as if you already have what you asked for. This is the peak — the moment of receiving.',
+                    duration: '~1 day',
+                    status: 'Gratitude ceremony',
                     isActive: true,
                     isCurrent: state.phase == MoonPhase.fullMoon,
                   ),
@@ -179,6 +185,8 @@ class _LunarCycleScreenState extends ConsumerState<LunarCycleScreen>
                     title: 'Waning — Release',
                     description:
                         'Let go completely. Stop pushing, stop checking. Trust that what you planted is growing in the dark.',
+                    duration: '~14 days',
+                    status: 'Window closed — silence',
                     isActive: false,
                     isCurrent: state.phase == MoonPhase.waning,
                   ),
@@ -241,6 +249,8 @@ class _PhaseRow extends StatelessWidget {
   final double illumination;
   final String title;
   final String description;
+  final String duration;
+  final String status;
   final bool isActive;
   final bool isCurrent;
 
@@ -249,6 +259,8 @@ class _PhaseRow extends StatelessWidget {
     required this.illumination,
     required this.title,
     required this.description,
+    required this.duration,
+    required this.status,
     required this.isActive,
     required this.isCurrent,
   });
@@ -341,6 +353,37 @@ class _PhaseRow extends StatelessWidget {
                         color: AppColors.textSecondary,
                         height: 1.5,
                       ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: AppColors.midNavy,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        duration,
+                        style: const TextStyle(
+                          color: AppColors.textMuted,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      status,
+                      style: TextStyle(
+                        color: isActive
+                            ? const Color(0xFF4A9E6B)
+                            : const Color(0xFF7B8CBA),
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
