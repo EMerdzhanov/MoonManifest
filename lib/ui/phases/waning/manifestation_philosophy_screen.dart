@@ -60,7 +60,7 @@ class ManifestationPhilosophyScreen extends ConsumerWidget {
                   // Title
                   Center(
                     child: Text(
-                      'The Ancient Practice',
+                      'What They Know\nThat You Don\'t',
                       style:
                           Theme.of(context).textTheme.displayLarge?.copyWith(
                                 color: AppColors.textPrimary,
@@ -72,47 +72,70 @@ class ManifestationPhilosophyScreen extends ConsumerWidget {
 
                   const SizedBox(height: 40),
 
-                  // Section 1
+                  // Section 1 — The hook
                   _body(
                     context,
-                    'Long before this app, before electricity, before written language — '
-                    'humans looked to the moon. Every ancient civilization understood '
-                    'what modern life has forgotten: there is a rhythm to creation, '
-                    'and it is not yours to control.',
+                    'The most successful people on earth don\'t just set goals. '
+                    'They work with timing. They understand something most people '
+                    'never will: that the universe has a rhythm, and those who '
+                    'align with it don\'t chase results — results chase them.',
                   ),
 
                   const SizedBox(height: 20),
 
                   _body(
                     context,
-                    'The Babylonians planted by it. The Egyptians built temples aligned to it. '
-                    'Fishermen, farmers, and healers have followed its pull for millennia. '
-                    'The moon governs the tides, the harvests, and — if you let it — '
-                    'the unfolding of your deepest intentions.',
+                    'This is not a secret. It is ancient knowledge — practiced for '
+                    'thousands of years by those who shaped empires, built dynasties, '
+                    'and quietly moved the world. The moon was their clock. '
+                    '"I AM" was their language. And commitment was their price.',
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  _body(
+                    context,
+                    'Here is what they understood: manifestation is simple. '
+                    'Not easy — simple. You declare what you are becoming. '
+                    'You repeat it until your mind believes it. '
+                    'You give thanks before you see proof. '
+                    'And then you let go. Completely.',
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  _body(
+                    context,
+                    'Most people fail because they won\'t commit to the process. '
+                    'They want the result without the discipline. They manifest '
+                    'for a day, check for signs, and quit when nothing happens by Tuesday. '
+                    'That is not manifestation. That is wishing.',
                   ),
 
                   const SizedBox(height: 40),
 
                   // Section 2
-                  _heading(context, 'Why You Cannot Simply Begin'),
+                  _heading(context, 'The Moon Is the Missing Piece'),
 
                   const SizedBox(height: 16),
 
                   _body(
                     context,
-                    'Manifestation is not a vending machine. You do not insert a wish '
-                    'and receive an outcome. It is a covenant between your will and '
-                    'the forces that move beneath the surface of things.',
+                    'You\'ve probably tried affirmations before. You\'ve probably said '
+                    '"I am abundant" in the mirror and felt nothing change. '
+                    'That\'s because you were speaking into dead air — no timing, '
+                    'no structure, no cosmic alignment behind your words.',
                   ),
 
                   const SizedBox(height: 20),
 
                   _body(
                     context,
-                    'This covenant demands alignment. You would not plant seeds in winter '
-                    'and blame the earth for your empty harvest. In the same way, '
-                    'you cannot set intentions at any moment and expect the universe '
-                    'to rearrange itself on your schedule.',
+                    'The moon changes everything. It gives your practice a cycle — '
+                    'a beginning, a middle, a peak, and a release. When you set '
+                    'intentions at the new moon, you\'re not just writing wishes. '
+                    'You\'re planting seeds in the only soil that has been moving '
+                    'oceans since before humans existed.',
                   ),
 
                   const SizedBox(height: 20),
