@@ -46,7 +46,7 @@ class LunarCycleScreen extends ConsumerWidget {
 
                   // Circular moon phase diagram
                   SizedBox(
-                    height: 340,
+                    height: 420,
                     child: CustomPaint(
                       painter: _CycleDiagramPainter(
                         currentPhase: state.phase,
@@ -343,23 +343,24 @@ class _CycleDiagramPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
-    final radius = math.min(size.width, size.height) / 2 - 50;
-    final moonRadius = 18.0;
+    final orbitRadius = math.min(size.width, size.height) / 2 - 70;
+    const moonRadius = 22.0;
 
-    // Draw dashed orbit circle
+    // Draw clean dashed orbit circle
     final orbitPaint = Paint()
-      ..color = AppColors.textMuted.withValues(alpha: 0.2)
+      ..color = AppColors.textMuted.withValues(alpha: 0.25)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
+      ..strokeWidth = 1.0;
 
-    const dashCount = 60;
+    const dashCount = 40;
+    const dashGapRatio = 0.5; // half dash, half gap
     for (var i = 0; i < dashCount; i++) {
-      final angle = (i / dashCount) * 2 * math.pi;
-      final nextAngle = ((i + 0.5) / dashCount) * 2 * math.pi;
+      final startAngle = (i / dashCount) * 2 * math.pi;
+      final sweepAngle = (dashGapRatio / dashCount) * 2 * math.pi;
       canvas.drawArc(
-        Rect.fromCircle(center: center, radius: radius),
-        angle,
-        nextAngle - angle,
+        Rect.fromCircle(center: center, radius: orbitRadius),
+        startAngle,
+        sweepAngle,
         false,
         orbitPaint,
       );
@@ -370,11 +371,10 @@ class _CycleDiagramPainter extends CustomPainter {
       final (phase, illum, label) = _phases[i];
       // Start from top (new moon), go clockwise
       final angle = (i / _phases.length) * 2 * math.pi - math.pi / 2;
-      final x = center.dx + radius * math.cos(angle);
-      final y = center.dy + radius * math.sin(angle);
+      final x = center.dx + orbitRadius * math.cos(angle);
+      final y = center.dy + orbitRadius * math.sin(angle);
       final moonCenter = Offset(x, y);
 
-      // Determine if this position corresponds to current phase
       final isCurrent = _isCurrentPosition(i);
       final isWaxing =
           phase == MoonPhase.waxing || phase == MoonPhase.newMoon;
@@ -383,40 +383,39 @@ class _CycleDiagramPainter extends CustomPainter {
       if (isCurrent) {
         final glowPaint = Paint()
           ..color = AppColors.mutedGold.withValues(alpha: 0.15)
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12);
-        canvas.drawCircle(moonCenter, moonRadius + 8, glowPaint);
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 14);
+        canvas.drawCircle(moonCenter, moonRadius + 10, glowPaint);
 
-        // Ring
         final ringPaint = Paint()
           ..color = AppColors.mutedGold.withValues(alpha: 0.5)
           ..style = PaintingStyle.stroke
           ..strokeWidth = 1.5;
-        canvas.drawCircle(moonCenter, moonRadius + 4, ringPaint);
+        canvas.drawCircle(moonCenter, moonRadius + 5, ringPaint);
       }
 
       // Draw moon
       _drawMoon(canvas, moonCenter, moonRadius, illum, isWaxing);
 
-      // Draw label
+      // Draw label — positioned well outside the moon
       final textPainter = TextPainter(
         text: TextSpan(
           text: label,
           style: TextStyle(
             color: isCurrent
                 ? AppColors.textPrimary
-                : AppColors.textMuted.withValues(alpha: 0.7),
-            fontSize: 10,
+                : AppColors.textSecondary.withValues(alpha: 0.8),
+            fontSize: isCurrent ? 13 : 12,
             fontWeight: isCurrent ? FontWeight.w600 : FontWeight.w400,
-            height: 1.2,
+            height: 1.3,
           ),
         ),
         textAlign: TextAlign.center,
         textDirection: TextDirection.ltr,
       );
-      textPainter.layout(maxWidth: 70);
+      textPainter.layout(maxWidth: 80);
 
-      // Position label outside the circle
-      final labelRadius = radius + 32;
+      // Push labels further out from the moons
+      final labelRadius = orbitRadius + moonRadius + 22;
       final labelX = center.dx + labelRadius * math.cos(angle);
       final labelY = center.dy + labelRadius * math.sin(angle);
       textPainter.paint(
