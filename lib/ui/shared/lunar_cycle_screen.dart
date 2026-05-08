@@ -157,24 +157,24 @@ class LunarCycleScreen extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _legendDot(AppColors.mutedGold),
+                      _legendDot(const Color(0xFF4A9E6B)),
                       const SizedBox(width: 6),
                       Text(
-                        'Manifestation active',
+                        'Manifest',
                         style: Theme.of(context)
                             .textTheme
                             .bodySmall
-                            ?.copyWith(color: AppColors.textMuted),
+                            ?.copyWith(color: const Color(0xFF4A9E6B)),
                       ),
                       const SizedBox(width: 24),
-                      _legendDot(AppColors.closedAmber),
+                      _legendDot(const Color(0xFF7B8CBA)),
                       const SizedBox(width: 6),
                       Text(
-                        'Release phase',
+                        'Release',
                         style: Theme.of(context)
                             .textTheme
                             .bodySmall
-                            ?.copyWith(color: AppColors.textMuted),
+                            ?.copyWith(color: const Color(0xFF7B8CBA)),
                       ),
                     ],
                   ),
@@ -346,28 +346,99 @@ class _CycleDiagramPainter extends CustomPainter {
     final orbitRadius = math.min(size.width, size.height) / 2 - 70;
     const moonRadius = 22.0;
 
-    // Draw solid inner orbit circle
+    // Draw inner orbit as two colored arcs:
+    // Green (manifest) = New Moon → Full Moon (right/clockwise, top to bottom)
+    // Amber (release) = Full Moon → New Moon (left/clockwise, bottom to top)
     final innerRadius = orbitRadius - moonRadius - 10;
-    final orbitPaint = Paint()
-      ..color = AppColors.textMuted.withValues(alpha: 0.2)
+    const manifestColor = Color(0xFF4A9E6B); // soft green
+    const releaseColor = Color(0xFF7B8CBA);  // soft blue
+
+    // Manifest arc: from top (-π/2), sweep π clockwise to bottom
+    final manifestPaint = Paint()
+      ..color = manifestColor
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.0;
-    canvas.drawCircle(center, innerRadius, orbitPaint);
+      ..strokeWidth = 2.5
+      ..strokeCap = StrokeCap.round;
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: innerRadius),
+      -math.pi / 2, // start at top
+      math.pi,      // sweep clockwise to bottom
+      false,
+      manifestPaint,
+    );
 
-    // Draw directional arrows (clockwise) on the inner orbit
-    const arrowCount = 4;
-    final arrowPaint = Paint()
-      ..color = AppColors.textMuted.withValues(alpha: 0.4)
-      ..style = PaintingStyle.fill;
+    // Release arc: from bottom (π/2), sweep π clockwise to top
+    final releasePaint = Paint()
+      ..color = releaseColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.5
+      ..strokeCap = StrokeCap.round;
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: innerRadius),
+      math.pi / 2, // start at bottom
+      math.pi,     // sweep clockwise to top
+      false,
+      releasePaint,
+    );
 
-    for (var i = 0; i < arrowCount; i++) {
-      // Position arrows between the moon phases (at 45° offsets)
-      final angle = (i / arrowCount) * 2 * math.pi - math.pi / 4;
+    // "MANIFEST" label on the right side (middle of green arc)
+    final manifestLabel = TextPainter(
+      text: const TextSpan(
+        text: 'M A N I F E S T',
+        style: TextStyle(
+          color: manifestColor,
+          fontSize: 9,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 2.0,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+
+    // Position on the right side, rotated to follow the arc
+    canvas.save();
+    canvas.translate(
+      center.dx + innerRadius + 12,
+      center.dy,
+    );
+    canvas.rotate(math.pi / 2); // rotate text to read top-to-bottom
+    manifestLabel.paint(
+      canvas,
+      Offset(-manifestLabel.width / 2, -manifestLabel.height / 2),
+    );
+    canvas.restore();
+
+    // "RELEASE" label on the left side (middle of blue arc)
+    final releaseLabel = TextPainter(
+      text: const TextSpan(
+        text: 'R E L E A S E',
+        style: TextStyle(
+          color: releaseColor,
+          fontSize: 9,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 2.0,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+
+    canvas.save();
+    canvas.translate(
+      center.dx - innerRadius - 12,
+      center.dy,
+    );
+    canvas.rotate(-math.pi / 2); // rotate text to read bottom-to-top
+    releaseLabel.paint(
+      canvas,
+      Offset(-releaseLabel.width / 2, -releaseLabel.height / 2),
+    );
+    canvas.restore();
+
+    // Directional arrows — 2 on each arc
+    void drawArrow(double angle, Color color) {
       final ax = center.dx + innerRadius * math.cos(angle);
       final ay = center.dy + innerRadius * math.sin(angle);
-
-      // Arrow points in the clockwise tangent direction
-      final tangentAngle = angle + math.pi / 2;
+      final tangentAngle = angle + math.pi / 2; // clockwise tangent
       const arrowSize = 5.0;
 
       final tipX = ax + arrowSize * math.cos(tangentAngle);
@@ -377,13 +448,22 @@ class _CycleDiagramPainter extends CustomPainter {
       final rightX = ax + arrowSize * math.cos(tangentAngle - 2.5);
       final rightY = ay + arrowSize * math.sin(tangentAngle - 2.5);
 
-      final arrowPath = Path()
-        ..moveTo(tipX, tipY)
-        ..lineTo(leftX, leftY)
-        ..lineTo(rightX, rightY)
-        ..close();
-      canvas.drawPath(arrowPath, arrowPaint);
+      canvas.drawPath(
+        Path()
+          ..moveTo(tipX, tipY)
+          ..lineTo(leftX, leftY)
+          ..lineTo(rightX, rightY)
+          ..close(),
+        Paint()..color = color.withValues(alpha: 0.7),
+      );
     }
+
+    // Green arrows on right arc (manifest)
+    drawArrow(-math.pi / 4, manifestColor);  // top-right
+    drawArrow(math.pi / 4, manifestColor);   // bottom-right
+    // Blue arrows on left arc (release)
+    drawArrow(3 * math.pi / 4, releaseColor);  // bottom-left
+    drawArrow(5 * math.pi / 4, releaseColor);  // top-left
 
     // Draw each moon phase around the circle
     for (var i = 0; i < _phases.length; i++) {
