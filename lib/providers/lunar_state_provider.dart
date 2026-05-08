@@ -60,21 +60,19 @@ class LunarStateNotifier extends AsyncNotifier<LunarState> {
     final (startH, startM) = settings.wakeStart;
     final (endH, endM) = settings.wakeEnd;
 
-    // TODO: Re-enable when running on a real device.
-    // Notification scheduling is disabled during development because
-    // it can cause native-level crashes in the iOS simulator.
-    // try {
-    //   await NotificationScheduler.reschedule(
-    //     phase: phaseInfo.phase,
-    //     intentions: intentions,
-    //     hour0: startH,
-    //     minute0: startM,
-    //     hour1: endH,
-    //     minute1: endM,
-    //     frequency: settings.notificationFrequency,
-    //   );
-    // } catch (_) {}
-
+    try {
+      await NotificationScheduler.reschedule(
+        phase: phaseInfo.phase,
+        intentions: intentions,
+        hour0: startH,
+        minute0: startM,
+        hour1: endH,
+        minute1: endM,
+        frequency: settings.notificationFrequency,
+      );
+    } catch (_) {
+      // Notification scheduling can fail in simulator or with timezone issues.
+    }
 
     return lunarState;
   }
