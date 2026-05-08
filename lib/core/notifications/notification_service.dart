@@ -1,5 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/data/latest_all.dart' as tzdata;
+import 'package:timezone/timezone.dart' as tz;
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin _plugin =
@@ -10,7 +11,16 @@ class NotificationService {
 
   static Future<void> initialize() async {
     if (_initialized) return;
-    tz.initializeTimeZones();
+    tzdata.initializeTimeZones();
+    // Set local timezone. On iOS/Android the device timezone name is available
+    // via DateTime.now().timeZoneName, but the tz database uses IANA names.
+    // Fall back to UTC if the device timezone isn't found.
+    try {
+      final localTz = tz.getLocation(DateTime.now().timeZoneName);
+      tz.setLocalLocation(localTz);
+    } catch (_) {
+      tz.setLocalLocation(tz.UTC);
+    }
 
     const androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');

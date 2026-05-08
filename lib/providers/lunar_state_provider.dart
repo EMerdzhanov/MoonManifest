@@ -60,15 +60,20 @@ class LunarStateNotifier extends AsyncNotifier<LunarState> {
     final (startH, startM) = settings.wakeStart;
     final (endH, endM) = settings.wakeEnd;
 
-    await NotificationScheduler.reschedule(
-      phase: phaseInfo.phase,
-      intentions: intentions,
-      hour0: startH,
-      minute0: startM,
-      hour1: endH,
-      minute1: endM,
-      frequency: settings.notificationFrequency,
-    );
+    try {
+      await NotificationScheduler.reschedule(
+        phase: phaseInfo.phase,
+        intentions: intentions,
+        hour0: startH,
+        minute0: startM,
+        hour1: endH,
+        minute1: endM,
+        frequency: settings.notificationFrequency,
+      );
+    } catch (_) {
+      // Notification scheduling can fail in simulator or with timezone issues.
+      // Don't crash the app — notifications are non-critical.
+    }
 
     return lunarState;
   }
