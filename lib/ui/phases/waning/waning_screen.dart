@@ -77,10 +77,58 @@ class WaningScreen extends ConsumerWidget {
         data: (state) {
           final formattedDate = DateFormat('MMMM d').format(state.nextNewMoon);
 
+          final daysUntil = state.nextNewMoon.difference(DateTime.now().toUtc()).inDays;
+
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32),
             child: Column(
               children: [
+                const SizedBox(height: 16),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  decoration: BoxDecoration(
+                    color: AppColors.cardDark,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: AppColors.mutedGold.withValues(alpha: 0.25),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.textMuted,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Manifestation window closed',
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: AppColors.textPrimary,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'Opens again in $daysUntil days at the new moon',
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: AppColors.textMuted,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 const Spacer(flex: 3),
                 MoonPhaseIndicator(
                   illumination: state.illumination,
