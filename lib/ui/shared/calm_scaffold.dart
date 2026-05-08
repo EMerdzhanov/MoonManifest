@@ -1,0 +1,43 @@
+import 'package:flutter/material.dart';
+import 'package:moon_manifest/theme/app_colors.dart';
+
+class CalmScaffold extends StatelessWidget {
+  final Widget body;
+  final bool showSettings;
+  final VoidCallback? onSettingsTap;
+  final VoidCallback? onHistoryTap;
+
+  const CalmScaffold({super.key, required this.body, this.showSettings = true, this.onSettingsTap, this.onHistoryTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.deepIndigo,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [AppColors.darkNavy, AppColors.deepIndigo]),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              if (showSettings)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      if (onHistoryTap != null)
+                        IconButton(icon: const Icon(Icons.auto_stories_outlined, color: AppColors.textMuted, size: 22), onPressed: onHistoryTap),
+                      if (onSettingsTap != null)
+                        IconButton(icon: const Icon(Icons.settings_outlined, color: AppColors.textMuted, size: 22), onPressed: onSettingsTap),
+                    ],
+                  ),
+                ),
+              Expanded(child: body),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
