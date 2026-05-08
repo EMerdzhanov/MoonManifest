@@ -22,9 +22,18 @@ class LunarState {
     required this.nextNewMoon,
     required this.nextFullMoon,
     required this.illumination,
+    this.hasCompletedCycleBefore = false,
   });
 
-  bool get shouldShowWaiting => activeCycle == null && phase != MoonPhase.newMoon;
+  /// Only show waiting screen for first-time users who haven't completed
+  /// a cycle yet AND aren't in a new moon window. Users who completed a
+  /// cycle should see the actual phase screen (e.g., waning), not waiting.
+  final bool hasCompletedCycleBefore;
+
+  bool get shouldShowWaiting =>
+      activeCycle == null &&
+      phase != MoonPhase.newMoon &&
+      !hasCompletedCycleBefore;
   bool get canSetIntentions => phase == MoonPhase.newMoon && (activeCycle == null || !activeCycle!.intentionsLocked);
   bool get canDoGratitude => phase == MoonPhase.fullMoon && activeCycle != null && !activeCycle!.gratitudeCompleted;
 }

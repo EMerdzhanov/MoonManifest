@@ -43,6 +43,10 @@ class LunarStateNotifier extends AsyncNotifier<LunarState> {
       }
     }
 
+    // Check if user has ever completed a cycle (for waiting vs waning routing)
+    final history = await ref.read(cycleRepositoryProvider).getHistory();
+    final hasCompletedCycle = history.isNotEmpty;
+
     final lunarState = LunarState(
       phase: phaseInfo.phase,
       dayInPhase: phaseInfo.dayInPhase,
@@ -53,6 +57,7 @@ class LunarStateNotifier extends AsyncNotifier<LunarState> {
       nextNewMoon: phaseInfo.nextNewMoon,
       nextFullMoon: phaseInfo.nextFullMoon,
       illumination: phaseInfo.illumination,
+      hasCompletedCycleBefore: hasCompletedCycle,
     );
 
     final settings = ref.read(settingsProvider);
