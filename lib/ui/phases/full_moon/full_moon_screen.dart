@@ -195,46 +195,45 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
     final nextNewMoon = lunarState.nextNewMoon.toLocal();
     final dateStr = DateFormat('MMMM d').format(nextNewMoon);
 
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const MoonPhaseIndicator(
-              illumination: 1.0,
-              phase: MoonPhase.fullMoon,
-              size: 120,
-            ),
-            const SizedBox(height: 32),
-            Text(
-              'The work is done.',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                    color: AppColors.textPrimary,
-                    height: 1.4,
-                  ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Now release.',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: AppColors.mutedGold,
-                    letterSpacing: 1.2,
-                  ),
-            ),
-            const SizedBox(height: 40),
-            Text(
-              'The waning phase begins soon.\nYour next cycle starts at the new moon on $dateStr.',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.textMuted,
-                    height: 1.6,
-                  ),
-            ),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 32),
+      child: Column(
+        children: [
+          const Spacer(flex: 3),
+          const MoonPhaseIndicator(
+            illumination: 1.0,
+            phase: MoonPhase.fullMoon,
+            size: 120,
+          ),
+          const SizedBox(height: 32),
+          Text(
+            'The work is done.',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                  color: AppColors.textPrimary,
+                  height: 1.4,
+                ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'Now release.',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  color: AppColors.mutedGold,
+                  letterSpacing: 1.2,
+                ),
+          ),
+          const Spacer(flex: 4),
+          Text(
+            'The waning phase begins soon.\nYour next cycle starts at the new moon on $dateStr.',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AppColors.textMuted,
+                  height: 1.6,
+                ),
+          ),
+          const SizedBox(height: 32),
+        ],
       ),
     );
   }
