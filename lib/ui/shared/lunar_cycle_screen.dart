@@ -561,7 +561,7 @@ class _CycleDiagramPainter extends CustomPainter {
         offsetX = moonX - moonRadius - textPainter.width - 14;
         offsetY = moonY - textPainter.height / 2;
       } else {
-        final labelRadius = orbitRadius + moonRadius + 24;
+        final labelRadius = orbitRadius + moonRadius + 32;
         final labelX = center.dx + labelRadius * math.cos(angle);
         final labelY = center.dy + labelRadius * math.sin(angle);
         offsetX = labelX - textPainter.width / 2;
