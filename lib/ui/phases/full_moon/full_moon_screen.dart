@@ -22,57 +22,76 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
   int _currentIntentionIndex = 0;
   bool _isListening = false;
   bool _speechAvailable = false;
-  late stt.SpeechToText _speech;
+  bool _speechInitialized = false;
+  stt.SpeechToText? _speech;
 
   @override
   void initState() {
     super.initState();
-    _speech = stt.SpeechToText();
-    _initSpeech();
+    // Speech is lazy-initialized on first mic tap to avoid
+    // native crashes on iOS simulator where speech APIs are unavailable.
   }
 
-  Future<void> _initSpeech() async {
-    final available = await _speech.initialize(
-      onError: (error) => setState(() => _isListening = false),
-      onStatus: (status) {
-        if (status == 'done' || status == 'notListening') {
-          setState(() => _isListening = false);
-        }
-      },
-    );
-    if (mounted) {
-      setState(() => _speechAvailable = available);
+  Future<void> _initSpeechIfNeeded() async {
+    if (_speechInitialized) return;
+    _speechInitialized = true;
+    try {
+      _speech = stt.SpeechToText();
+      final available = await _speech!.initialize(
+        onError: (error) {
+          if (mounted) setState(() => _isListening = false);
+        },
+        onStatus: (status) {
+          if ((status == 'done' || status == 'notListening') && mounted) {
+            setState(() => _isListening = false);
+          }
+        },
+      );
+      if (mounted) {
+        setState(() => _speechAvailable = available);
+      }
+    } catch (e) {
+      debugPrint('Speech init failed: $e');
+      _speechAvailable = false;
     }
   }
 
   @override
   void dispose() {
     _gratitudeController.dispose();
-    _speech.stop();
+    _speech?.stop();
     super.dispose();
   }
 
   Future<void> _toggleListening() async {
+    await _initSpeechIfNeeded();
+    if (!_speechAvailable || _speech == null) return;
+
     if (_isListening) {
-      await _speech.stop();
+      await _speech!.stop();
       setState(() => _isListening = false);
     } else {
       setState(() => _isListening = true);
-      await _speech.listen(
-        onResult: (result) {
-          if (result.recognizedWords.isNotEmpty) {
-            final current = _gratitudeController.text;
-            final separator = current.isEmpty ? '' : ' ';
-            _gratitudeController.text = current + separator + result.recognizedWords;
-            _gratitudeController.selection = TextSelection.fromPosition(
-              TextPosition(offset: _gratitudeController.text.length),
-            );
-          }
-        },
-        listenFor: const Duration(seconds: 30),
-        pauseFor: const Duration(seconds: 5),
-        listenOptions: stt.SpeechListenOptions(partialResults: false),
-      );
+      try {
+        await _speech!.listen(
+          onResult: (result) {
+            if (result.recognizedWords.isNotEmpty) {
+              final current = _gratitudeController.text;
+              final separator = current.isEmpty ? '' : ' ';
+              _gratitudeController.text = current + separator + result.recognizedWords;
+              _gratitudeController.selection = TextSelection.fromPosition(
+                TextPosition(offset: _gratitudeController.text.length),
+              );
+            }
+          },
+          listenFor: const Duration(seconds: 30),
+          pauseFor: const Duration(seconds: 5),
+          listenOptions: stt.SpeechListenOptions(partialResults: false),
+        );
+      } catch (e) {
+        debugPrint('Speech listen failed: $e');
+        setState(() => _isListening = false);
+      }
     }
   }
 
