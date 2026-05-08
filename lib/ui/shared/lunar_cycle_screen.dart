@@ -6,11 +6,39 @@ import 'package:moon_manifest/providers/lunar_state_provider.dart';
 import 'package:moon_manifest/theme/app_colors.dart';
 import 'package:moon_manifest/ui/shared/moon_painter.dart';
 
-class LunarCycleScreen extends ConsumerWidget {
+class LunarCycleScreen extends ConsumerStatefulWidget {
   const LunarCycleScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<LunarCycleScreen> createState() => _LunarCycleScreenState();
+}
+
+class _LunarCycleScreenState extends ConsumerState<LunarCycleScreen>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _pulseController;
+  late final Animation<double> _pulseAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2000),
+    )..repeat(reverse: true);
+
+    _pulseAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final lunarAsync = ref.watch(lunarStateProvider);
 
     return Scaffold(
@@ -44,15 +72,19 @@ class LunarCycleScreen extends ConsumerWidget {
                 children: [
                   const SizedBox(height: 16),
 
-                  // Circular moon phase diagram
+                  // Circular moon phase diagram with pulse animation
                   SizedBox(
                     height: 440,
-                    child: CustomPaint(
-                      painter: _CycleDiagramPainter(
-                        currentPhase: state.phase,
-                        illumination: state.illumination,
+                    child: AnimatedBuilder(
+                      animation: _pulseAnimation,
+                      builder: (context, child) => CustomPaint(
+                        painter: _CycleDiagramPainter(
+                          currentPhase: state.phase,
+                          illumination: state.illumination,
+                          pulseValue: _pulseAnimation.value,
+                        ),
+                        child: const SizedBox.expand(),
                       ),
-                      child: const SizedBox.expand(),
                     ),
                   ),
 
@@ -323,10 +355,12 @@ class _PhaseRow extends StatelessWidget {
 class _CycleDiagramPainter extends CustomPainter {
   final MoonPhase currentPhase;
   final double illumination;
+  final double pulseValue; // 0.0 to 1.0, drives the glow animation
 
   _CycleDiagramPainter({
     required this.currentPhase,
     required this.illumination,
+    required this.pulseValue,
   });
 
   static const _phases = [
@@ -469,18 +503,24 @@ class _CycleDiagramPainter extends CustomPainter {
       final isWaxing =
           phase == MoonPhase.waxing || phase == MoonPhase.newMoon;
 
-      // Draw glow for current phase
+      // Draw pulsing glow for current phase
       if (isCurrent) {
+        // Outer glow — pulses in size and opacity
+        final glowSize = moonRadius + 10 + (pulseValue * 6);
+        final glowAlpha = 0.1 + (pulseValue * 0.12);
         final glowPaint = Paint()
-          ..color = AppColors.mutedGold.withValues(alpha: 0.15)
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 14);
-        canvas.drawCircle(moonCenter, moonRadius + 10, glowPaint);
+          ..color = AppColors.mutedGold.withValues(alpha: glowAlpha)
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 16);
+        canvas.drawCircle(moonCenter, glowSize, glowPaint);
 
+        // Ring — pulses in opacity and slightly in size
+        final ringSize = moonRadius + 5 + (pulseValue * 2);
+        final ringAlpha = 0.35 + (pulseValue * 0.3);
         final ringPaint = Paint()
-          ..color = AppColors.mutedGold.withValues(alpha: 0.5)
+          ..color = AppColors.mutedGold.withValues(alpha: ringAlpha)
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 1.5;
-        canvas.drawCircle(moonCenter, moonRadius + 5, ringPaint);
+          ..strokeWidth = 1.5 + (pulseValue * 0.5);
+        canvas.drawCircle(moonCenter, ringSize, ringPaint);
       }
 
       // Draw moon
@@ -640,5 +680,6 @@ class _CycleDiagramPainter extends CustomPainter {
   @override
   bool shouldRepaint(_CycleDiagramPainter oldDelegate) =>
       oldDelegate.currentPhase != currentPhase ||
-      oldDelegate.illumination != illumination;
+      oldDelegate.illumination != illumination ||
+      oldDelegate.pulseValue != pulseValue;
 }
