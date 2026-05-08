@@ -381,72 +381,63 @@ class _CycleDiagramPainter extends CustomPainter {
       releasePaint,
     );
 
-    // "MANIFEST" label on the right side (middle of green arc)
-    final manifestLabel = TextPainter(
-      text: const TextSpan(
-        text: 'M A N I F E S T',
-        style: TextStyle(
-          color: manifestColor,
-          fontSize: 9,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 2.0,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
+    // Curved text: draw each character along the inside of the arc
+    void drawCurvedText(String text, double startAngle, double sweepAngle,
+        double textRadius, Color color) {
+      final chars = text.split('');
+      final charSpacing = sweepAngle / (chars.length + 1);
 
-    // Position on the right side, rotated to follow the arc
-    canvas.save();
-    canvas.translate(
-      center.dx + innerRadius + 12,
-      center.dy,
-    );
-    canvas.rotate(math.pi / 2); // rotate text to read top-to-bottom
-    manifestLabel.paint(
-      canvas,
-      Offset(-manifestLabel.width / 2, -manifestLabel.height / 2),
-    );
-    canvas.restore();
+      for (var i = 0; i < chars.length; i++) {
+        final charAngle = startAngle + charSpacing * (i + 1);
+        final cx = center.dx + textRadius * math.cos(charAngle);
+        final cy = center.dy + textRadius * math.sin(charAngle);
 
-    // "RELEASE" label on the left side (middle of blue arc)
-    final releaseLabel = TextPainter(
-      text: const TextSpan(
-        text: 'R E L E A S E',
-        style: TextStyle(
-          color: releaseColor,
-          fontSize: 9,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 2.0,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
+        final tp = TextPainter(
+          text: TextSpan(
+            text: chars[i],
+            style: TextStyle(
+              color: color.withValues(alpha: 0.85),
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 1.0,
+            ),
+          ),
+          textDirection: TextDirection.ltr,
+        )..layout();
 
-    canvas.save();
-    canvas.translate(
-      center.dx - innerRadius - 12,
-      center.dy,
-    );
-    canvas.rotate(-math.pi / 2); // rotate text to read bottom-to-top
-    releaseLabel.paint(
-      canvas,
-      Offset(-releaseLabel.width / 2, -releaseLabel.height / 2),
-    );
-    canvas.restore();
+        canvas.save();
+        canvas.translate(cx, cy);
+        // Rotate character to follow the arc tangent + face inward
+        canvas.rotate(charAngle + math.pi / 2);
+        tp.paint(canvas, Offset(-tp.width / 2, -tp.height / 2));
+        canvas.restore();
+      }
+    }
 
-    // Directional arrows — 2 on each arc
+    // "MANIFEST" on the inside of the right (green) arc
+    // Right arc goes from -π/2 (top) to π/2 (bottom)
+    drawCurvedText(
+        'MANIFEST', -math.pi / 2, math.pi, innerRadius - 14, manifestColor);
+
+    // "RELEASE" on the inside of the left (blue) arc
+    // Left arc goes from π/2 (bottom) to 3π/2 (top)
+    drawCurvedText(
+        'RELEASE', math.pi / 2, math.pi, innerRadius - 14, releaseColor);
+
+    // Directional arrows — larger and more visible
     void drawArrow(double angle, Color color) {
       final ax = center.dx + innerRadius * math.cos(angle);
       final ay = center.dy + innerRadius * math.sin(angle);
       final tangentAngle = angle + math.pi / 2; // clockwise tangent
-      const arrowSize = 5.0;
+      const arrowLen = 10.0;
+      const arrowWidth = 6.0;
 
-      final tipX = ax + arrowSize * math.cos(tangentAngle);
-      final tipY = ay + arrowSize * math.sin(tangentAngle);
-      final leftX = ax + arrowSize * math.cos(tangentAngle + 2.5);
-      final leftY = ay + arrowSize * math.sin(tangentAngle + 2.5);
-      final rightX = ax + arrowSize * math.cos(tangentAngle - 2.5);
-      final rightY = ay + arrowSize * math.sin(tangentAngle - 2.5);
+      final tipX = ax + arrowLen * math.cos(tangentAngle);
+      final tipY = ay + arrowLen * math.sin(tangentAngle);
+      final leftX = ax + arrowWidth * math.cos(tangentAngle + 2.3);
+      final leftY = ay + arrowWidth * math.sin(tangentAngle + 2.3);
+      final rightX = ax + arrowWidth * math.cos(tangentAngle - 2.3);
+      final rightY = ay + arrowWidth * math.sin(tangentAngle - 2.3);
 
       canvas.drawPath(
         Path()
@@ -454,7 +445,7 @@ class _CycleDiagramPainter extends CustomPainter {
           ..lineTo(leftX, leftY)
           ..lineTo(rightX, rightY)
           ..close(),
-        Paint()..color = color.withValues(alpha: 0.7),
+        Paint()..color = color,
       );
     }
 
