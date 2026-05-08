@@ -7,6 +7,7 @@ import 'package:moon_manifest/data/repositories/export_repository.dart';
 import 'package:moon_manifest/providers/cycle_provider.dart';
 import 'package:moon_manifest/providers/settings_provider.dart';
 import 'package:moon_manifest/theme/app_colors.dart';
+import 'package:moon_manifest/ui/shared/manifestation_guide_screen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -132,6 +133,28 @@ class SettingsScreen extends ConsumerWidget {
                   color: AppColors.textSecondary,
                   fontSize: 14,
                   height: 1.6,
+                ),
+              ),
+              const SizedBox(height: 16),
+              GestureDetector(
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const ManifestationGuideScreen()),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.menu_book_outlined, size: 18, color: AppColors.mutedGold),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Manifestation Guide',
+                      style: TextStyle(
+                        color: AppColors.mutedGold,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const Spacer(),
+                    const Icon(Icons.chevron_right, size: 18, color: AppColors.mutedGold),
+                  ],
                 ),
               ),
             ],

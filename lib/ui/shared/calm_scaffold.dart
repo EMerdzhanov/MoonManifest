@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moon_manifest/theme/app_colors.dart';
 import 'package:moon_manifest/ui/shared/debug_controls.dart';
 import 'package:moon_manifest/ui/shared/lunar_cycle_screen.dart';
+import 'package:moon_manifest/ui/shared/manifestation_guide_screen.dart';
 
 class CalmScaffold extends StatelessWidget {
   final Widget body;
@@ -29,6 +30,12 @@ class CalmScaffold extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      IconButton(
+                        icon: const Icon(Icons.menu_book_outlined, color: AppColors.textMuted, size: 22),
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => const ManifestationGuideScreen()),
+                        ),
+                      ),
                       IconButton(
                         icon: const Icon(Icons.dark_mode_outlined, color: AppColors.textMuted, size: 22),
                         onPressed: () => Navigator.of(context).push(
