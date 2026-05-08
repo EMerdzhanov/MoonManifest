@@ -256,36 +256,34 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           ),
           const SizedBox(height: 4),
           Text(
-            'How many reminders per phase?',
+            'How many times per day do you want to be reminded?',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: AppColors.textSecondary,
                 ),
           ),
           const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+          Wrap(
+            spacing: 12,
+            runSpacing: 8,
             children: frequencies.map((freq) {
-              return Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: ChoiceChip(
-                  label: Text('$freq / phase'),
-                  selected: _selectedFrequency == freq,
-                  onSelected: (_) => setState(() => _selectedFrequency = freq),
-                  selectedColor: AppColors.mutedGold,
-                  backgroundColor: AppColors.cardDark,
-                  labelStyle: TextStyle(
-                    color: _selectedFrequency == freq
-                        ? AppColors.deepIndigo
-                        : AppColors.textSecondary,
-                    fontWeight: _selectedFrequency == freq
-                        ? FontWeight.w600
-                        : FontWeight.normal,
-                  ),
-                  side: BorderSide(
-                    color: _selectedFrequency == freq
-                        ? AppColors.mutedGold
-                        : AppColors.textMuted,
-                  ),
+              return ChoiceChip(
+                label: Text('$freq / day'),
+                selected: _selectedFrequency == freq,
+                onSelected: (_) => setState(() => _selectedFrequency = freq),
+                selectedColor: AppColors.mutedGold,
+                backgroundColor: AppColors.cardDark,
+                labelStyle: TextStyle(
+                  color: _selectedFrequency == freq
+                      ? AppColors.deepIndigo
+                      : AppColors.textSecondary,
+                  fontWeight: _selectedFrequency == freq
+                      ? FontWeight.w600
+                      : FontWeight.normal,
+                ),
+                side: BorderSide(
+                  color: _selectedFrequency == freq
+                      ? AppColors.mutedGold
+                      : AppColors.textMuted,
                 ),
               );
             }).toList(),
@@ -299,7 +297,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           ),
           const SizedBox(height: 4),
           Text(
-            'We\'ll only send notifications during this window.',
+            'No notifications outside these hours.',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: AppColors.textSecondary,
                 ),
