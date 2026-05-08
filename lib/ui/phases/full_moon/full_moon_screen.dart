@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:moon_manifest/core/moon/moon_phase.dart';
 import 'package:moon_manifest/data/models/cycle.dart';
+import 'package:moon_manifest/data/models/lunar_state.dart';
 import 'package:moon_manifest/providers/cycle_provider.dart';
 import 'package:moon_manifest/providers/lunar_state_provider.dart';
 import 'package:moon_manifest/theme/app_colors.dart';
@@ -152,7 +154,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
                 return _buildNoIntentionsView(context);
               }
               if (cycle.gratitudeCompleted) {
-                return _buildCompletedView(context);
+                return _buildCompletedView(context, lunarState);
               }
               return _buildCeremonyView(context, cycle, lunarState.isGracePeriod, lunarState.graceDeadline);
             },
@@ -189,7 +191,10 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
     );
   }
 
-  Widget _buildCompletedView(BuildContext context) {
+  Widget _buildCompletedView(BuildContext context, LunarState lunarState) {
+    final nextNewMoon = lunarState.nextNewMoon.toLocal();
+    final dateStr = DateFormat('MMMM d').format(nextNewMoon);
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -217,6 +222,15 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     color: AppColors.mutedGold,
                     letterSpacing: 1.2,
+                  ),
+            ),
+            const SizedBox(height: 40),
+            Text(
+              'The waning phase begins soon.\nYour next cycle starts at the new moon on $dateStr.',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppColors.textMuted,
+                    height: 1.6,
                   ),
             ),
           ],
