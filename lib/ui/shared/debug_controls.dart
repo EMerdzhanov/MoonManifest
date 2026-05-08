@@ -49,29 +49,48 @@ class DebugControls extends ConsumerWidget {
   }
 
   Future<void> _showDatePicker(BuildContext context, WidgetRef ref) async {
-    final engine = ref.read(moonPhaseEngineProvider);
-    final initialDate = engine.debugDateOverride ?? DateTime.now();
+    try {
+      final engine = ref.read(moonPhaseEngineProvider);
+      final initialDate = engine.debugDateOverride ?? DateTime.now();
 
-    final date = await showDatePicker(
-      context: context, initialDate: initialDate,
-      firstDate: DateTime(2020), lastDate: DateTime(2035),
-      builder: (context, child) => Theme(
-        data: Theme.of(context).copyWith(colorScheme: const ColorScheme.dark(primary: AppColors.mutedGold, surface: AppColors.darkNavy)),
-        child: child!,
-      ),
-    );
-    if (date == null || !context.mounted) return;
+      final date = await showDatePicker(
+        context: context,
+        initialDate: initialDate,
+        firstDate: DateTime(2020),
+        lastDate: DateTime(2035),
+        builder: (context, child) => Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.dark(
+              primary: AppColors.mutedGold,
+              surface: AppColors.darkNavy,
+            ),
+          ),
+          child: child!,
+        ),
+      );
+      if (date == null || !context.mounted) return;
 
-    final time = await showTimePicker(
-      context: context, initialTime: TimeOfDay.fromDateTime(initialDate),
-      builder: (context, child) => Theme(
-        data: Theme.of(context).copyWith(colorScheme: const ColorScheme.dark(primary: AppColors.mutedGold, surface: AppColors.darkNavy)),
-        child: child!,
-      ),
-    );
-    if (time == null) return;
+      final time = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(initialDate),
+        builder: (context, child) => Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.dark(
+              primary: AppColors.mutedGold,
+              surface: AppColors.darkNavy,
+            ),
+          ),
+          child: child!,
+        ),
+      );
+      if (time == null || !context.mounted) return;
 
-    engine.debugDateOverride = DateTime.utc(date.year, date.month, date.day, time.hour, time.minute);
-    ref.read(lunarStateProvider.notifier).refresh();
+      engine.debugDateOverride = DateTime.utc(
+        date.year, date.month, date.day, time.hour, time.minute,
+      );
+      ref.read(lunarStateProvider.notifier).refresh();
+    } catch (e) {
+      debugPrint('Debug date picker error: $e');
+    }
   }
 }

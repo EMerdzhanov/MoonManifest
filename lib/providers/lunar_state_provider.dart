@@ -79,11 +79,19 @@ class LunarStateNotifier extends AsyncNotifier<LunarState> {
   }
 
   Future<void> _refresh() async {
-    state = AsyncData(await _computeState());
+    try {
+      state = AsyncData(await _computeState());
+    } catch (e, st) {
+      state = AsyncError(e, st);
+    }
   }
 
   Future<void> refresh() async {
     state = const AsyncLoading();
-    state = AsyncData(await _computeState());
+    try {
+      state = AsyncData(await _computeState());
+    } catch (e, st) {
+      state = AsyncError(e, st);
+    }
   }
 }
