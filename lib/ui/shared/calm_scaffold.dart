@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moon_manifest/theme/app_colors.dart';
+import 'package:moon_manifest/ui/shared/debug_controls.dart';
 
 class CalmScaffold extends StatelessWidget {
   final Widget body;
@@ -20,6 +21,7 @@ class CalmScaffold extends StatelessWidget {
         child: SafeArea(
           child: Column(
             children: [
+              const Align(alignment: Alignment.topCenter, child: DebugControls()),
               if (showSettings)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

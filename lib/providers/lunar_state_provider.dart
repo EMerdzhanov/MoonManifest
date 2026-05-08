@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:moon_manifest/core/moon/moon_phase.dart';
 import 'package:moon_manifest/core/moon/moon_phase_engine.dart';
+import 'package:moon_manifest/core/notifications/notification_scheduler.dart';
 import 'package:moon_manifest/data/models/lunar_state.dart';
 import 'package:moon_manifest/providers/cycle_provider.dart';
+import 'package:moon_manifest/providers/settings_provider.dart';
 
 final moonPhaseEngineProvider = Provider<MoonPhaseEngine>((ref) {
   return MoonPhaseEngine();
@@ -22,11 +25,25 @@ class LunarStateNotifier extends AsyncNotifier<LunarState> {
 
   Future<LunarState> _computeState() async {
     final engine = ref.read(moonPhaseEngineProvider);
-    final cycle = await ref.read(activeCycleProvider.future);
     final now = engine.now;
     final phaseInfo = engine.currentPhase(now);
 
-    return LunarState(
+    // Get mutable cycle reference
+    var cycle = await ref.read(activeCycleProvider.future);
+
+    // Check if we need to transition cycles
+    if (cycle != null && phaseInfo.phase == MoonPhase.newMoon) {
+      final cycleNewMoon = cycle.newMoonDate;
+      final currentNewMoon = phaseInfo.phaseStart;
+      final daysBetween = currentNewMoon.difference(cycleNewMoon).inDays;
+      if (daysBetween > 20) {
+        // This is a different new moon — complete the old cycle
+        await ref.read(activeCycleProvider.notifier).completeCycle();
+        cycle = null;
+      }
+    }
+
+    final lunarState = LunarState(
       phase: phaseInfo.phase,
       dayInPhase: phaseInfo.dayInPhase,
       totalDaysInPhase: phaseInfo.totalDaysInPhase,
@@ -37,6 +54,23 @@ class LunarStateNotifier extends AsyncNotifier<LunarState> {
       nextFullMoon: phaseInfo.nextFullMoon,
       illumination: phaseInfo.illumination,
     );
+
+    final settings = ref.read(settingsProvider);
+    final intentions = cycle?.intentions.map((i) => i.text).toList() ?? [];
+    final (startH, startM) = settings.wakeStart;
+    final (endH, endM) = settings.wakeEnd;
+
+    await NotificationScheduler.reschedule(
+      phase: phaseInfo.phase,
+      intentions: intentions,
+      hour0: startH,
+      minute0: startM,
+      hour1: endH,
+      minute1: endM,
+      frequency: settings.notificationFrequency,
+    );
+
+    return lunarState;
   }
 
   Future<void> _refresh() async {
