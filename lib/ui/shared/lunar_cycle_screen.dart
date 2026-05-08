@@ -474,7 +474,18 @@ class _CycleDiagramPainter extends CustomPainter {
       Paint()..color = AppColors.darkNavy,
     );
 
-    if (illumination <= 0.01) return;
+    if (illumination <= 0.01) {
+      // Draw a subtle outline so the new moon is visible
+      canvas.drawCircle(
+        center,
+        radius,
+        Paint()
+          ..color = AppColors.textMuted.withValues(alpha: 0.4)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1.0,
+      );
+      return;
+    }
 
     final litPaint = Paint()..color = AppColors.moonSilver;
 
