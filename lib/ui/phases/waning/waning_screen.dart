@@ -10,53 +10,6 @@ import 'package:moon_manifest/ui/shared/moon_phase_indicator.dart';
 class WaningScreen extends ConsumerWidget {
   const WaningScreen({super.key});
 
-  void _showWhyQuiet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: AppColors.darkNavy,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => Padding(
-        padding: const EdgeInsets.fromLTRB(28, 24, 28, 40),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: AppColors.textMuted.withValues(alpha: 0.4),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              'The Waning Phase',
-              style: Theme.of(context).textTheme.displaySmall,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Your manifestation practice follows the lunar cycle. '
-              'During the waning moon, the practice is to release — '
-              'to let go of control and trust that your intentions are unfolding.\n\n'
-              'This quiet is intentional. The app steps back so you can too.\n\n'
-              'When the new moon arrives, you\'ll set fresh intentions '
-              'and the cycle begins again.',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: AppColors.textSecondary,
-                    height: 1.7,
-                  ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final lunarAsync = ref.watch(lunarStateProvider);
@@ -75,58 +28,75 @@ class WaningScreen extends ConsumerWidget {
           ),
         ),
         data: (state) {
-          final formattedDate = DateFormat('MMMM d').format(state.nextNewMoon);
-
-          final daysUntil = state.nextNewMoon.difference(DateTime.now().toUtc()).inDays;
+          final formattedDate =
+              DateFormat('MMMM d').format(state.nextNewMoon);
+          final daysUntil =
+              state.nextNewMoon.difference(DateTime.now().toUtc()).inDays;
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32),
             child: Column(
               children: [
                 const SizedBox(height: 16),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardDark,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: AppColors.mutedGold.withValues(alpha: 0.25),
+                // Tappable banner
+                GestureDetector(
+                  onTap: () => context.push('/philosophy'),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 14),
+                    decoration: BoxDecoration(
+                      color: AppColors.cardDark,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: AppColors.mutedGold.withValues(alpha: 0.25),
+                      ),
                     ),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 8,
-                        height: 8,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.textMuted,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Manifestation window closed',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color: AppColors.textPrimary,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                'Opens again in $daysUntil days at the new moon',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
+                                      color: AppColors.textMuted,
+                                    ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Icon(
+                          Icons.chevron_right,
                           color: AppColors.textMuted,
+                          size: 20,
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Manifestation window closed',
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: AppColors.textPrimary,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              'Opens again in $daysUntil days at the new moon',
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: AppColors.textMuted,
-                                  ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 const Spacer(flex: 3),
@@ -139,16 +109,20 @@ class WaningScreen extends ConsumerWidget {
                 Text(
                   'Release. Trust.',
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                        color: AppColors.textPrimary,
-                        height: 1.3,
-                      ),
+                  style:
+                      Theme.of(context).textTheme.displaySmall?.copyWith(
+                            color: AppColors.textPrimary,
+                            height: 1.3,
+                          ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'The work is done.',
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineMedium
+                      ?.copyWith(
                         color: AppColors.mutedGold,
                         letterSpacing: 1.0,
                       ),
@@ -157,20 +131,23 @@ class WaningScreen extends ConsumerWidget {
                 Text(
                   'Next new moon: $formattedDate',
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppColors.textMuted,
-                        letterSpacing: 0.6,
-                      ),
+                  style:
+                      Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: AppColors.textMuted,
+                            letterSpacing: 0.6,
+                          ),
                 ),
                 const Spacer(flex: 4),
                 GestureDetector(
-                  onTap: () => _showWhyQuiet(context),
+                  onTap: () => context.push('/philosophy'),
                   child: Text(
                     'Why is it quiet?',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.textMuted.withValues(alpha: 0.6),
+                          color:
+                              AppColors.textMuted.withValues(alpha: 0.6),
                           decoration: TextDecoration.underline,
-                          decorationColor: AppColors.textMuted.withValues(alpha: 0.4),
+                          decorationColor:
+                              AppColors.textMuted.withValues(alpha: 0.4),
                         ),
                   ),
                 ),

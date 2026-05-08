@@ -13,6 +13,7 @@ import 'package:moon_manifest/ui/phases/full_moon/full_moon_screen.dart';
 import 'package:moon_manifest/ui/phases/waning/waning_screen.dart';
 import 'package:moon_manifest/ui/history/history_screen.dart';
 import 'package:moon_manifest/ui/settings/settings_screen.dart';
+import 'package:moon_manifest/ui/phases/waning/manifestation_philosophy_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final settings = ref.watch(settingsProvider);
@@ -24,7 +25,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       final path = state.matchedLocation;
 
       // Don't redirect away from push-routed screens
-      if (path == '/history' || path == '/settings') return null;
+      if (path == '/history' || path == '/settings' || path == '/philosophy') return null;
 
       // Show onboarding if not complete
       if (!settings.onboardingComplete) {
@@ -58,6 +59,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/waning', builder: (context, state) => const WaningScreen()),
       GoRoute(path: '/history', builder: (context, state) => const HistoryScreen()),
       GoRoute(path: '/settings', builder: (context, state) => const SettingsScreen()),
+      GoRoute(path: '/philosophy', builder: (context, state) => const ManifestationPhilosophyScreen()),
     ],
   );
 });
