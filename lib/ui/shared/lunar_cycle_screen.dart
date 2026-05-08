@@ -544,24 +544,25 @@ class _CycleDiagramPainter extends CustomPainter {
       );
       textPainter.layout(maxWidth: 80);
 
-      // Position labels well clear of moons.
-      // Cardinal left/right (indices 2,6) need horizontal push.
-      // Diagonal (indices 1,3,5,7) need radial push.
-      final labelRadius = orbitRadius + moonRadius + 28;
-      final labelX = center.dx + labelRadius * math.cos(angle);
-      final labelY = center.dy + labelRadius * math.sin(angle);
+      // Position labels clear of moons.
+      // Left/right moons (indices 2, 6) get labels above/below to stay in frame.
+      // All others get labels pushed radially outward.
+      double offsetX;
+      double offsetY;
 
-      double offsetX = labelX - textPainter.width / 2;
-      double offsetY = labelY - textPainter.height / 2;
-
-      // Left/right positions: push label fully to the side of the moon
       if (i == 2) {
-        // First Quarter (right) — align left edge past the moon
-        offsetX = labelX + moonRadius - 8;
-        offsetY = labelY - textPainter.height / 2;
+        // First Quarter (right) — label below the moon
+        offsetX = center.dx + orbitRadius * math.cos(angle) - textPainter.width / 2;
+        offsetY = center.dy + orbitRadius * math.sin(angle) + moonRadius + 6;
       } else if (i == 6) {
-        // Last Quarter (left) — align right edge past the moon
-        offsetX = labelX - textPainter.width - moonRadius + 8;
+        // Last Quarter (left) — label above the moon
+        offsetX = center.dx + orbitRadius * math.cos(angle) - textPainter.width / 2;
+        offsetY = center.dy + orbitRadius * math.sin(angle) - moonRadius - textPainter.height - 6;
+      } else {
+        final labelRadius = orbitRadius + moonRadius + 24;
+        final labelX = center.dx + labelRadius * math.cos(angle);
+        final labelY = center.dy + labelRadius * math.sin(angle);
+        offsetX = labelX - textPainter.width / 2;
         offsetY = labelY - textPainter.height / 2;
       }
 
