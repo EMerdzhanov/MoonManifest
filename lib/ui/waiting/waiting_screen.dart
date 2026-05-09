@@ -6,6 +6,8 @@ import 'package:moon_manifest/providers/cycle_provider.dart';
 import 'package:moon_manifest/providers/lunar_state_provider.dart';
 import 'package:moon_manifest/theme/app_colors.dart';
 import 'package:moon_manifest/ui/shared/calm_scaffold.dart';
+import 'package:moon_manifest/ui/shared/manifestation_guide_screen.dart';
+import 'package:moon_manifest/ui/shared/lunar_cycle_screen.dart';
 import 'package:moon_manifest/ui/shared/moon_phase_indicator.dart';
 
 class WaitingScreen extends ConsumerStatefulWidget {
@@ -115,7 +117,39 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 32),
+
+                // Prepare while you wait
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Prepare while you wait',
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          color: AppColors.mutedGold,
+                        ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                _PrepCard(
+                  icon: Icons.menu_book_outlined,
+                  title: 'Learn how to manifest',
+                  subtitle: 'The 4 rules that make this practice work',
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const ManifestationGuideScreen()),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                _PrepCard(
+                  icon: Icons.dark_mode_outlined,
+                  title: 'Understand the lunar cycle',
+                  subtitle: 'See where you are and what each phase means',
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const LunarCycleScreen()),
+                  ),
+                ),
+
+                const SizedBox(height: 32),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -165,6 +199,66 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _PrepCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  const _PrepCard({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.cardDark,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: AppColors.mutedGold.withValues(alpha: 0.2),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, size: 22, color: AppColors.mutedGold),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: AppColors.textPrimary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppColors.textMuted,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right, size: 18, color: AppColors.textMuted),
+          ],
+        ),
       ),
     );
   }
