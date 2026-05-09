@@ -93,6 +93,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
     final cycleAsync = ref.watch(activeCycleProvider);
 
     return CalmScaffold(
+      onHistoryTap: () => context.push('/history'),
       onSettingsTap: () => context.push('/settings'),
       body: lunarAsync.when(
         loading: () => const Center(
