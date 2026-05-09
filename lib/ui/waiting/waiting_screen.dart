@@ -44,6 +44,7 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
     }
 
     return CalmScaffold(
+      onHistoryTap: () => context.push('/history'),
       onSettingsTap: () => context.push('/settings'),
       body: lunarAsync.when(
         loading: () => const Center(
