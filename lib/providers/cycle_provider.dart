@@ -55,6 +55,8 @@ class ActiveCycleNotifier extends AsyncNotifier<Cycle?> {
 }
 
 final historyProvider = FutureProvider<List<Cycle>>((ref) async {
+  // Watch activeCycleProvider so history refreshes when cycles complete
+  ref.watch(activeCycleProvider);
   final repo = ref.watch(cycleRepositoryProvider);
   return repo.getHistory();
 });
