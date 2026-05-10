@@ -15,10 +15,7 @@ class CycleProgressBar extends ConsumerStatefulWidget {
   ConsumerState<CycleProgressBar> createState() => _CycleProgressBarState();
 }
 
-class _CycleProgressBarState extends ConsumerState<CycleProgressBar>
-    with SingleTickerProviderStateMixin {
-  bool _expanded = false;
-
+class _CycleProgressBarState extends ConsumerState<CycleProgressBar> {
   static const _manifestColor = Color(0xFF4A9E6B);
   static const _releaseColor = Color(0xFF7B8CBA);
 
@@ -86,7 +83,7 @@ class _CycleProgressBarState extends ConsumerState<CycleProgressBar>
             children: [
               // Tappable bar
               GestureDetector(
-                onTap: () => setState(() => _expanded = !_expanded),
+                onTap: () => _showTimelineSheet(context, state, engine),
                 child: Column(
                   children: [
                     // The bar
@@ -189,10 +186,8 @@ class _CycleProgressBarState extends ConsumerState<CycleProgressBar>
                               ),
                             ),
                             const SizedBox(width: 4),
-                            Icon(
-                              _expanded
-                                  ? Icons.keyboard_arrow_down
-                                  : Icons.keyboard_arrow_up,
+                            const Icon(
+                              Icons.keyboard_arrow_up,
                               size: 12,
                               color: AppColors.textMuted,
                             ),
@@ -211,16 +206,6 @@ class _CycleProgressBarState extends ConsumerState<CycleProgressBar>
                 ),
               ),
 
-              // Expandable timeline
-              AnimatedCrossFade(
-                firstChild: const SizedBox.shrink(),
-                secondChild: _buildExpandedTimeline(context, state, engine),
-                crossFadeState: _expanded
-                    ? CrossFadeState.showSecond
-                    : CrossFadeState.showFirst,
-                duration: const Duration(milliseconds: 300),
-                sizeCurve: Curves.easeInOut,
-              ),
             ],
           ),
         );
@@ -228,50 +213,66 @@ class _CycleProgressBarState extends ConsumerState<CycleProgressBar>
     );
   }
 
-  Widget _buildExpandedTimeline(
-      BuildContext context, dynamic state, dynamic engine) {
+  void _showTimelineSheet(BuildContext context, dynamic state, dynamic engine) {
     final entries = buildCycleTimeline(state, engine);
 
-    return Container(
-      margin: const EdgeInsets.only(top: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.cardDark,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.mutedGold.withValues(alpha: 0.15),
-        ),
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.darkNavy,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'This Cycle',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  color: AppColors.mutedGold,
-                ),
-          ),
-          const SizedBox(height: 16),
-          CycleTimelineWidget(entries: entries),
-          const SizedBox(height: 12),
-          Center(
-            child: GestureDetector(
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const LunarCycleScreen()),
-              ),
-              child: Text(
-                'See full cycle details',
-                style: TextStyle(
-                  color: AppColors.mutedGold.withValues(alpha: 0.7),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  decoration: TextDecoration.underline,
-                  decorationColor: AppColors.mutedGold.withValues(alpha: 0.4),
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Drag handle
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppColors.textMuted.withValues(alpha: 0.4),
+                  borderRadius: BorderRadius.circular(2),
                 ),
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: 20),
+            Text(
+              'This Cycle',
+              style: Theme.of(ctx).textTheme.displaySmall?.copyWith(
+                    color: AppColors.mutedGold,
+                  ),
+            ),
+            const SizedBox(height: 20),
+            CycleTimelineWidget(entries: entries),
+            const SizedBox(height: 16),
+            Center(
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(ctx).pop();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (_) => const LunarCycleScreen()),
+                  );
+                },
+                child: Text(
+                  'See full cycle details',
+                  style: TextStyle(
+                    color: AppColors.mutedGold.withValues(alpha: 0.7),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    decoration: TextDecoration.underline,
+                    decorationColor:
+                        AppColors.mutedGold.withValues(alpha: 0.4),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
