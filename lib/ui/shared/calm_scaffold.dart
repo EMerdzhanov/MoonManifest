@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moon_manifest/theme/app_colors.dart';
+import 'package:moon_manifest/ui/shared/cycle_progress_bar.dart';
 import 'package:moon_manifest/ui/shared/debug_controls.dart';
 import 'package:moon_manifest/ui/shared/lunar_cycle_screen.dart';
 import 'package:moon_manifest/ui/shared/manifestation_guide_screen.dart';
@@ -49,6 +50,7 @@ class CalmScaffold extends StatelessWidget {
                     ],
                   ),
                 ),
+              if (showSettings) const CycleProgressBar(),
               Expanded(child: body),
             ],
           ),
