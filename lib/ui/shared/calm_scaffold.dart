@@ -50,8 +50,11 @@ class CalmScaffold extends StatelessWidget {
                     ],
                   ),
                 ),
-              if (showSettings) const CycleProgressBar(),
               Expanded(child: body),
+              if (showSettings) ...[
+                const CycleProgressBar(),
+                const SizedBox(height: 8),
+              ],
             ],
           ),
         ),
