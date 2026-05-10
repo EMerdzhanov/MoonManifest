@@ -35,6 +35,11 @@ class SettingsNotifier extends StateNotifier<AppSettings> {
     state = state.copyWith(wakeWindowStart: start, wakeWindowEnd: end);
   }
 
+  Future<void> setMoonStyle(String style) async {
+    await _repo.setMoonStyle(style);
+    state = state.copyWith(moonStyle: style);
+  }
+
   Future<void> updateSettings(AppSettings settings) async {
     await _repo.save(settings);
     state = settings;
