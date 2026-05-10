@@ -59,8 +59,8 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
     if (_isSubmitting || !_hasAtLeastOneNonEmpty) return;
     setState(() => _isSubmitting = true);
 
-    final now = DateTime.now();
     final engine = ref.read(moonPhaseEngineProvider);
+    final now = engine.now;
     final phaseInfo = engine.currentPhase(now);
 
     final intentions = _controllers
