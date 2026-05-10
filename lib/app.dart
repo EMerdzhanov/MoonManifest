@@ -15,6 +15,7 @@ import 'package:moon_manifest/ui/history/history_screen.dart';
 import 'package:moon_manifest/ui/settings/settings_screen.dart';
 import 'package:moon_manifest/ui/phases/waning/manifestation_philosophy_screen.dart';
 
+
 final routerProvider = Provider<GoRouter>((ref) {
   final settings = ref.watch(settingsProvider);
   final lunarState = ref.watch(lunarStateProvider);
