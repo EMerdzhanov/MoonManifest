@@ -4,6 +4,7 @@ import 'package:intl/intl.dart' hide TextDirection;
 import 'package:moon_manifest/core/moon/moon_phase.dart';
 import 'package:moon_manifest/providers/lunar_state_provider.dart';
 import 'package:moon_manifest/theme/app_colors.dart';
+import 'package:moon_manifest/ui/shared/lunar_cycle_screen.dart';
 
 /// A compact horizontal bar showing the 4 phases of the current cycle
 /// with a "you are here" indicator. Always visible on phase screens.
@@ -77,7 +78,11 @@ class CycleProgressBar extends ConsumerWidget {
 
         final fmt = DateFormat('MMM d');
 
-        return Padding(
+        return GestureDetector(
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const LunarCycleScreen()),
+          ),
+          child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
           child: Column(
             children: [
@@ -193,6 +198,7 @@ class CycleProgressBar extends ConsumerWidget {
               ),
             ],
           ),
+        ),
         );
       },
     );
