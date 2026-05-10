@@ -13,27 +13,27 @@ class MoonPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = math.min(size.width, size.height) / 2;
 
-    // Visible dark side — slightly lighter than background
-    const darkSideColor = Color(0xFF1E2540);
+    // Visible dark side — noticeably lighter than background
+    const darkSideColor = Color(0xFF252D4A);
     canvas.drawCircle(center, radius, Paint()..color = darkSideColor);
 
     if (illumination <= 0.01) {
-      // New moon — show outline ring and faint glow so it's visible
+      // New moon — show outline ring and glow so it's clearly visible
       canvas.drawCircle(
         center,
         radius,
         Paint()
-          ..color = AppColors.moonSilver.withValues(alpha: 0.15)
+          ..color = AppColors.moonSilver.withValues(alpha: 0.25)
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 1.0,
+          ..strokeWidth = 1.5,
       );
-      // Subtle outer glow
+      // Outer glow
       canvas.drawCircle(
         center,
         radius + 4,
         Paint()
-          ..color = AppColors.moonSilver.withValues(alpha: 0.06)
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
+          ..color = AppColors.moonSilver.withValues(alpha: 0.12)
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12),
       );
       return;
     }

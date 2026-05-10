@@ -80,7 +80,6 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
         );
 
     await ref.read(scratchpadProvider.notifier).clear();
-    await ref.read(lunarStateProvider.notifier).refresh();
 
     if (mounted) {
       setState(() => _isSubmitting = false);
