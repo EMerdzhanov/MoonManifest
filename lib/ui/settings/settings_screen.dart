@@ -101,6 +101,20 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
 
+          // Moon style section
+          _SectionCard(
+            title: 'Moon Style',
+            children: [
+              const Text(
+                'Choose how the moon looks throughout the app',
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+              ),
+              const SizedBox(height: 16),
+              const _MoonStylePicker(),
+            ],
+          ),
+          const SizedBox(height: 16),
+
           // Data section
           _SectionCard(
             title: 'Data',
@@ -402,5 +416,78 @@ class _ActionButton extends StatelessWidget {
         onPressed: onPressed,
       ),
     );
+  }
+}
+
+class _MoonStylePicker extends ConsumerWidget {
+  const _MoonStylePicker();
+
+  static const _styles = [
+    ('classic', 'Classic'),
+    ('starfield', 'Starfield'),
+    ('aura', 'Aura'),
+    ('halo', 'Halo'),
+  ];
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final current = ref.watch(settingsProvider.select((s) => s.moonStyle));
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: _styles.map((entry) {
+        final (value, label) = entry;
+        final selected = current == value;
+        return GestureDetector(
+          onTap: () => ref.read(settingsProvider.notifier).setMoonStyle(value),
+          child: Column(
+            children: [
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: selected
+                      ? AppColors.mutedGold.withValues(alpha: 0.15)
+                      : AppColors.midNavy,
+                  border: Border.all(
+                    color: selected
+                        ? AppColors.mutedGold
+                        : AppColors.textMuted.withValues(alpha: 0.3),
+                    width: selected ? 2 : 1,
+                  ),
+                ),
+                child: Center(
+                  child: Icon(
+                    _iconFor(value),
+                    color: selected ? AppColors.mutedGold : AppColors.textSecondary,
+                    size: 24,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                label,
+                style: TextStyle(
+                  color: selected ? AppColors.mutedGold : AppColors.textMuted,
+                  fontSize: 11,
+                  fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  static IconData _iconFor(String style) {
+    return switch (style) {
+      'starfield' => Icons.star_outline,
+      'aura' => Icons.flare,
+      'halo' => Icons.lens_blur,
+      _ => Icons.circle_outlined,
+    };
   }
 }
