@@ -110,7 +110,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
           final isLocked = cycle != null && cycle.intentionsLocked;
 
           return isLocked
-              ? _buildLockedView(context, cycle)
+              ? _buildLockedView(context, cycle, lunarState)
               : _buildInputView(context, lunarState);
         },
       ),
@@ -331,7 +331,58 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
     );
   }
 
-  Widget _buildLockedView(BuildContext context, Cycle cycle) {
+  bool _isEditing = false;
+  List<TextEditingController>? _editControllers;
+
+  void _startEditing(Cycle cycle) {
+    setState(() {
+      _isEditing = true;
+      _editControllers = cycle.intentions
+          .map((i) => TextEditingController(text: i.text))
+          .toList();
+    });
+  }
+
+  void _cancelEditing() {
+    _editControllers?.forEach((c) => c.dispose());
+    setState(() {
+      _isEditing = false;
+      _editControllers = null;
+    });
+  }
+
+  Future<void> _saveEdits(Cycle cycle) async {
+    if (_editControllers == null) return;
+
+    final now = DateTime.now();
+    final updated = _editControllers!
+        .asMap()
+        .entries
+        .where((e) => e.value.text.trim().isNotEmpty)
+        .map((e) {
+      final original = e.key < cycle.intentions.length
+          ? cycle.intentions[e.key]
+          : null;
+      return Intention(
+        id: original?.id ?? '${now.millisecondsSinceEpoch}_${e.key}',
+        text: e.value.text.trim(),
+        createdAt: original?.createdAt ?? now,
+      );
+    }).toList();
+
+    await HapticFeedback.lightImpact();
+    await ref.read(activeCycleProvider.notifier).updateIntentions(updated);
+
+    _editControllers?.forEach((c) => c.dispose());
+    setState(() {
+      _isEditing = false;
+      _editControllers = null;
+    });
+  }
+
+  Widget _buildLockedView(BuildContext context, Cycle cycle, dynamic lunarState) {
+    final canEdit = lunarState.phase == MoonPhase.newMoon;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: Column(
@@ -354,45 +405,144 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'They have been planted. Trust the process.',
+            _isEditing
+                ? 'Edit your intentions below.'
+                : 'They have been planted. Trust the process.',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: AppColors.textSecondary,
                 ),
           ),
           const SizedBox(height: 32),
-          ...cycle.intentions.map(
-            (intention) => Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: Container(
-                width: double.infinity,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                decoration: BoxDecoration(
-                  color: AppColors.cardDark,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                      color: AppColors.mutedGold.withValues(alpha: 0.2),
-                      width: 1),
+
+          if (_isEditing && _editControllers != null) ...[
+            // Editable intention fields
+            ...List.generate(_editControllers!.length, (index) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: TextField(
+                  controller: _editControllers![index],
+                  decoration: InputDecoration(
+                    hintText: 'Intention ${index + 1}...',
+                    filled: true,
+                    fillColor: AppColors.cardDark,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(
+                          color: AppColors.mutedGold, width: 1),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 14),
+                  ),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: AppColors.textPrimary,
+                      ),
                 ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.brightness_2_outlined,
-                        color: AppColors.mutedGold, size: 16),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        intention.text,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: AppColors.textPrimary,
-                            ),
+              );
+            }),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: _cancelEditing,
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: AppColors.textMuted),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                  ],
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(color: AppColors.textSecondary),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => _saveEdits(cycle),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.mutedGold,
+                      foregroundColor: AppColors.deepIndigo,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text('Save changes'),
+                  ),
+                ),
+              ],
+            ),
+          ] else ...[
+            // Read-only intention cards
+            ...cycle.intentions.map(
+              (intention) => Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Container(
+                  width: double.infinity,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  decoration: BoxDecoration(
+                    color: AppColors.cardDark,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                        color: AppColors.mutedGold.withValues(alpha: 0.2),
+                        width: 1),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.brightness_2_outlined,
+                          color: AppColors.mutedGold, size: 16),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          intention.text,
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                color: AppColors.textPrimary,
+                              ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
+            if (canEdit) ...[
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () => _startEditing(cycle),
+                  icon: const Icon(Icons.edit_outlined, size: 16),
+                  label: const Text('Edit intentions'),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(
+                        color: AppColors.mutedGold.withValues(alpha: 0.5)),
+                    foregroundColor: AppColors.mutedGold,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'You can edit until the waxing phase begins.',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppColors.textMuted,
+                    ),
+              ),
+            ],
+          ],
           const SizedBox(height: 32),
         ],
       ),

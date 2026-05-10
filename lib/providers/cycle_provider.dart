@@ -27,6 +27,15 @@ class ActiveCycleNotifier extends AsyncNotifier<Cycle?> {
     state = AsyncData(cycle);
   }
 
+  Future<void> updateIntentions(List<Intention> intentions) async {
+    final current = state.valueOrNull;
+    if (current == null) return;
+    final updated = current.copyWith(intentions: intentions);
+    final repo = ref.read(cycleRepositoryProvider);
+    await repo.saveActiveCycle(updated);
+    state = AsyncData(updated);
+  }
+
   Future<void> addGratitude(Gratitude gratitude) async {
     final current = state.valueOrNull;
     if (current == null) return;
