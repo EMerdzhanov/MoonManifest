@@ -1,13 +1,16 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:moon_manifest/core/crypto/export_crypto.dart';
 import 'package:moon_manifest/data/repositories/export_repository.dart';
 import 'package:moon_manifest/providers/cycle_provider.dart';
 import 'package:moon_manifest/providers/settings_provider.dart';
 import 'package:moon_manifest/theme/app_colors.dart';
+import 'package:moon_manifest/core/moon/moon_phase.dart';
 import 'package:moon_manifest/ui/shared/manifestation_guide_screen.dart';
+import 'package:moon_manifest/ui/shared/moon_phase_indicator.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -439,13 +442,18 @@ class _MoonStylePicker extends ConsumerWidget {
         final (value, label) = entry;
         final selected = current == value;
         return GestureDetector(
-          onTap: () => ref.read(settingsProvider.notifier).setMoonStyle(value),
+          onTap: () {
+            if (current != value) {
+              HapticFeedback.lightImpact();
+              ref.read(settingsProvider.notifier).setMoonStyle(value);
+            }
+          },
           child: Column(
             children: [
               AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                width: 56,
-                height: 56,
+                width: 64,
+                height: 64,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: selected
@@ -459,10 +467,11 @@ class _MoonStylePicker extends ConsumerWidget {
                   ),
                 ),
                 child: Center(
-                  child: Icon(
-                    _iconFor(value),
-                    color: selected ? AppColors.mutedGold : AppColors.textSecondary,
-                    size: 24,
+                  child: MoonPhaseIndicator(
+                    illumination: 0.5,
+                    phase: MoonPhase.waxing,
+                    size: 40,
+                    styleOverride: value,
                   ),
                 ),
               ),
@@ -480,14 +489,5 @@ class _MoonStylePicker extends ConsumerWidget {
         );
       }).toList(),
     );
-  }
-
-  static IconData _iconFor(String style) {
-    return switch (style) {
-      'starfield' => Icons.star_outline,
-      'aura' => Icons.flare,
-      'halo' => Icons.lens_blur,
-      _ => Icons.circle_outlined,
-    };
   }
 }

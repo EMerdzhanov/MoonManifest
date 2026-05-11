@@ -11,29 +11,36 @@ class MoonPhaseIndicator extends ConsumerWidget {
   final double illumination;
   final MoonPhase phase;
   final double size;
+  /// When set, forces a specific style instead of reading the setting.
+  /// Used by the style picker to show live previews.
+  final String? styleOverride;
 
   const MoonPhaseIndicator({
     super.key,
     required this.illumination,
     required this.phase,
     this.size = 120,
+    this.styleOverride,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final moonStyle = ref.watch(
-      settingsProvider.select((s) => s.moonStyle),
-    );
+    final moonStyle = styleOverride ??
+        ref.watch(settingsProvider.select((s) => s.moonStyle));
     final isWaxing = phase == MoonPhase.waxing || phase == MoonPhase.newMoon;
 
-    return switch (moonStyle) {
+    final moon = switch (moonStyle) {
       'starfield' => StarfieldMoon(
+          key: const ValueKey('starfield'),
           illumination: illumination, isWaxing: isWaxing, size: size),
       'aura' => AuraMoon(
+          key: const ValueKey('aura'),
           illumination: illumination, isWaxing: isWaxing, phase: phase, size: size),
       'halo' => HaloMoon(
+          key: const ValueKey('halo'),
           illumination: illumination, isWaxing: isWaxing, phase: phase, size: size),
       _ => SizedBox(
+          key: const ValueKey('classic'),
           width: size,
           height: size,
           child: CustomPaint(
@@ -41,5 +48,13 @@ class MoonPhaseIndicator extends ConsumerWidget {
           ),
         ),
     };
+
+    // Skip AnimatedSwitcher for overridden previews (no transitions needed)
+    if (styleOverride != null) return moon;
+
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 400),
+      child: moon,
+    );
   }
 }
