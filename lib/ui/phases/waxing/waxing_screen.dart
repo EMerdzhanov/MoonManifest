@@ -103,7 +103,7 @@ class _WaxingScreenState extends ConsumerState<WaxingScreen>
                   phase: lunarState.phase,
                   size: 140,
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 48),
                 Text(
                   'Day ${lunarState.dayInPhase} of waxing.',
                   textAlign: TextAlign.center,

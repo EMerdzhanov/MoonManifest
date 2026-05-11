@@ -111,7 +111,7 @@ class WaningScreen extends ConsumerWidget {
                   phase: state.phase,
                   size: 140,
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 48),
                 Text(
                   'Release. Trust.',
                   textAlign: TextAlign.center,

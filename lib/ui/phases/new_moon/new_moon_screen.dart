@@ -131,7 +131,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
             phase: MoonPhase.newMoon,
             size: 140,
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 48),
           Text(
             'New Moon.\nSet your intentions.',
             textAlign: TextAlign.center,
@@ -393,7 +393,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
             phase: MoonPhase.newMoon,
             size: 140,
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 48),
           Text(
             'These are your intentions for this cycle.',
             textAlign: TextAlign.center,

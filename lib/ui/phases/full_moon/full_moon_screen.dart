@@ -179,7 +179,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
               phase: MoonPhase.fullMoon,
               size: 140,
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 48),
             Text(
               'No intentions were set this cycle',
               textAlign: TextAlign.center,
@@ -208,7 +208,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
             phase: MoonPhase.fullMoon,
             size: 140,
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 48),
           Text(
             'The work is done.',
             textAlign: TextAlign.center,
@@ -263,7 +263,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
             phase: MoonPhase.fullMoon,
             size: 140,
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 48),
           Text(
             'Full Moon. Give thanks.',
             textAlign: TextAlign.center,

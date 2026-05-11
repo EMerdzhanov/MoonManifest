@@ -76,7 +76,7 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
                   phase: state.phase,
                   size: 140,
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 48),
                 Text(
                   'Your first cycle begins at the new moon on $formattedDate.',
                   textAlign: TextAlign.center,
