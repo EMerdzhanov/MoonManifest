@@ -95,9 +95,6 @@ class _HaloPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.save();
-    canvas.clipRect(Offset.zero & size);
-
     final center = Offset(size.width / 2, size.height / 2);
     final maxRadius = math.min(size.width, size.height) / 2;
     final scale = 1.0 + glowValue * 0.02;
@@ -161,8 +158,6 @@ class _HaloPainter extends CustomPainter {
       );
       canvas.restore();
     }
-
-    canvas.restore();
   }
 
   void _drawMoon(Canvas canvas, Offset center, double radius) {

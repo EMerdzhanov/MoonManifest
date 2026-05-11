@@ -87,10 +87,6 @@ class _StarfieldPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Clip to bounds so glow/stars don't leak outside
-    canvas.save();
-    canvas.clipRect(Offset.zero & size);
-
     final center = Offset(size.width / 2, size.height / 2);
     final baseRadius = math.min(size.width, size.height) / 2 - 6;
     final breathScale = 1.0 + (breathValue * 0.03);
@@ -148,8 +144,6 @@ class _StarfieldPainter extends CustomPainter {
         );
       }
     }
-
-    canvas.restore();
   }
 
   void _drawMoon(Canvas canvas, Offset center, double radius) {
