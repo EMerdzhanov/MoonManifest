@@ -90,7 +90,7 @@ class _StarfieldPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final baseRadius = math.min(size.width, size.height) / 2;
     final breathScale = 1.0 + (breathValue * 0.03);
-    final radius = (baseRadius - 8) * breathScale;
+    final radius = baseRadius * breathScale;
 
     // Stars
     final rng = math.Random(42);

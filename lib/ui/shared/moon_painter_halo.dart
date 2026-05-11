@@ -98,7 +98,7 @@ class _HaloPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final maxRadius = math.min(size.width, size.height) / 2;
     final scale = 1.0 + glowValue * 0.02;
-    final r = (maxRadius - 16) * scale;
+    final r = maxRadius * scale;
     final ringColor = _isManifest ? AppColors.mutedGold : const Color(0xFF8090C0);
 
     // Glow layers
