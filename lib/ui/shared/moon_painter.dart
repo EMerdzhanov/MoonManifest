@@ -13,9 +13,19 @@ class MoonPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = math.min(size.width, size.height) / 2;
 
-    // Visible dark side — noticeably lighter than background
+    // Dark base — visible disc slightly lighter than background
     const darkSideColor = Color(0xFF252D4A);
     canvas.drawCircle(center, radius, Paint()..color = darkSideColor);
+
+    // Subtle edge ring for definition
+    canvas.drawCircle(
+      center,
+      radius,
+      Paint()
+        ..color = const Color(0xFF3A4260).withValues(alpha: 0.5)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.8,
+    );
 
     if (illumination <= 0.01) {
       // New moon — show outline ring and glow so it's clearly visible
@@ -27,7 +37,6 @@ class MoonPainter extends CustomPainter {
           ..style = PaintingStyle.stroke
           ..strokeWidth = 1.5,
       );
-      // Outer glow
       canvas.drawCircle(
         center,
         radius + 4,
@@ -38,34 +47,67 @@ class MoonPainter extends CustomPainter {
       return;
     }
 
-    final litPaint = Paint()..color = AppColors.moonSilver;
+    // Gradient lit surface (matches the animated styles)
+    final litPaint = Paint()
+      ..shader = RadialGradient(
+        center: const Alignment(-0.2, -0.2),
+        colors: [
+          AppColors.moonWhite,
+          AppColors.moonSilver,
+          const Color(0xFFD0D0DC),
+        ],
+        stops: const [0.0, 0.5, 1.0],
+      ).createShader(Rect.fromCircle(center: center, radius: radius));
 
     if (illumination >= 0.99) {
-      // Full moon with glow
+      // Full moon with gradient and bloom
       canvas.drawCircle(center, radius, litPaint);
-      canvas.drawCircle(center, radius * 1.1, Paint()..color = AppColors.moonGlow..maskFilter = const MaskFilter.blur(BlurStyle.normal, 20));
+      canvas.drawCircle(
+        center,
+        radius * 1.12,
+        Paint()
+          ..color = AppColors.moonGlow.withValues(alpha: 0.3)
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 20),
+      );
       return;
     }
 
-    // Partial illumination using two arcs
-    final path = Path();
-    final startAngle = isWaxing ? -math.pi / 2 : math.pi / 2;
-    path.addArc(Rect.fromCircle(center: center, radius: radius), startAngle, math.pi);
-
-    final terminatorXRadius = radius * (1 - 2 * illumination).abs();
+    // Partial illumination using terminator
+    final terminatorXRadius = radius * (2 * illumination - 1).abs();
     final isGibbous = illumination > 0.5;
 
+    final path = Path();
     if (isWaxing) {
       path.addArc(
-        Rect.fromCenter(center: center, width: terminatorXRadius * 2, height: radius * 2),
-        isGibbous ? math.pi / 2 : -math.pi / 2,
+        Rect.fromCircle(center: center, radius: radius),
+        -math.pi / 2,
         math.pi,
+      );
+      path.arcTo(
+        Rect.fromCenter(
+          center: center,
+          width: terminatorXRadius * 2,
+          height: radius * 2,
+        ),
+        math.pi / 2,
+        isGibbous ? math.pi : -math.pi,
+        false,
       );
     } else {
       path.addArc(
-        Rect.fromCenter(center: center, width: terminatorXRadius * 2, height: radius * 2),
-        isGibbous ? -math.pi / 2 : math.pi / 2,
-        math.pi,
+        Rect.fromCircle(center: center, radius: radius),
+        -math.pi / 2,
+        -math.pi,
+      );
+      path.arcTo(
+        Rect.fromCenter(
+          center: center,
+          width: terminatorXRadius * 2,
+          height: radius * 2,
+        ),
+        math.pi / 2,
+        isGibbous ? -math.pi : math.pi,
+        false,
       );
     }
 
@@ -75,5 +117,6 @@ class MoonPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(MoonPainter oldDelegate) =>
-      oldDelegate.illumination != illumination || oldDelegate.isWaxing != isWaxing;
+      oldDelegate.illumination != illumination ||
+      oldDelegate.isWaxing != isWaxing;
 }

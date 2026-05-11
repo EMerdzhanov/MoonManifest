@@ -174,8 +174,8 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const MoonPhaseIndicator(
-              illumination: 1.0,
+            MoonPhaseIndicator(
+              illumination: ref.watch(lunarStateProvider).valueOrNull?.illumination ?? 1.0,
               phase: MoonPhase.fullMoon,
               size: 120,
             ),
@@ -203,8 +203,8 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
       child: Column(
         children: [
           const Spacer(flex: 3),
-          const MoonPhaseIndicator(
-            illumination: 1.0,
+          MoonPhaseIndicator(
+            illumination: ref.watch(lunarStateProvider).valueOrNull?.illumination ?? 1.0,
             phase: MoonPhase.fullMoon,
             size: 120,
           ),
@@ -258,8 +258,8 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 8),
-          const MoonPhaseIndicator(
-            illumination: 1.0,
+          MoonPhaseIndicator(
+            illumination: ref.watch(lunarStateProvider).valueOrNull?.illumination ?? 1.0,
             phase: MoonPhase.fullMoon,
             size: 120,
           ),
