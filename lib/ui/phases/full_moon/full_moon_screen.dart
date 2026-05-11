@@ -177,7 +177,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
             MoonPhaseIndicator(
               illumination: ref.watch(lunarStateProvider).valueOrNull?.illumination ?? 1.0,
               phase: MoonPhase.fullMoon,
-              size: 120,
+              size: 140,
             ),
             const SizedBox(height: 32),
             Text(
@@ -206,7 +206,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
           MoonPhaseIndicator(
             illumination: ref.watch(lunarStateProvider).valueOrNull?.illumination ?? 1.0,
             phase: MoonPhase.fullMoon,
-            size: 120,
+            size: 140,
           ),
           const SizedBox(height: 32),
           Text(
@@ -261,7 +261,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
           MoonPhaseIndicator(
             illumination: ref.watch(lunarStateProvider).valueOrNull?.illumination ?? 1.0,
             phase: MoonPhase.fullMoon,
-            size: 120,
+            size: 140,
           ),
           const SizedBox(height: 24),
           Text(

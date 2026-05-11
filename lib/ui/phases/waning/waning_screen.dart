@@ -109,7 +109,7 @@ class WaningScreen extends ConsumerWidget {
                 MoonPhaseIndicator(
                   illumination: state.illumination,
                   phase: state.phase,
-                  size: 120,
+                  size: 140,
                 ),
                 const SizedBox(height: 32),
                 Text(
