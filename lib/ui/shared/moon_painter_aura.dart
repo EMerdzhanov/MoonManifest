@@ -81,7 +81,7 @@ class _AuraPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
-    final radius = math.min(size.width, size.height) / 2;
+    final radius = math.min(size.width, size.height) / 2 - 6;
     final auraColor = _isManifest ? AppColors.mutedGold : const Color(0xFF9AA8D0);
 
     // Background glow
