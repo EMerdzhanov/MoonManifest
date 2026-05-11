@@ -29,32 +29,48 @@ class MoonPhaseIndicator extends ConsumerWidget {
         ref.watch(settingsProvider.select((s) => s.moonStyle));
     final isWaxing = phase == MoonPhase.waxing || phase == MoonPhase.newMoon;
 
+    // Give painters extra space for glow/particle effects beyond the moon body.
+    // The layout footprint stays at `size` via the outer SizedBox.
+    final renderSize = size + 24;
+
     final moon = switch (moonStyle) {
       'starfield' => StarfieldMoon(
           key: const ValueKey('starfield'),
-          illumination: illumination, isWaxing: isWaxing, size: size),
+          illumination: illumination, isWaxing: isWaxing, size: renderSize),
       'aura' => AuraMoon(
           key: const ValueKey('aura'),
-          illumination: illumination, isWaxing: isWaxing, phase: phase, size: size),
+          illumination: illumination, isWaxing: isWaxing, phase: phase, size: renderSize),
       'halo' => HaloMoon(
           key: const ValueKey('halo'),
-          illumination: illumination, isWaxing: isWaxing, phase: phase, size: size),
+          illumination: illumination, isWaxing: isWaxing, phase: phase, size: renderSize),
       _ => SizedBox(
           key: const ValueKey('classic'),
-          width: size,
-          height: size,
+          width: renderSize,
+          height: renderSize,
           child: CustomPaint(
             painter: MoonPainter(illumination: illumination, isWaxing: isWaxing),
           ),
         ),
     };
 
+    // Wrap in a fixed-size box so layout stays at `size`, but allow the
+    // painter to overflow for glow/particle effects.
+    final wrapped = SizedBox(
+      width: size,
+      height: size,
+      child: OverflowBox(
+        maxWidth: renderSize,
+        maxHeight: renderSize,
+        child: moon,
+      ),
+    );
+
     // Skip AnimatedSwitcher for overridden previews (no transitions needed)
-    if (styleOverride != null) return moon;
+    if (styleOverride != null) return wrapped;
 
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 400),
-      child: moon,
+      child: wrapped,
     );
   }
 }
