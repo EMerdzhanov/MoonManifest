@@ -88,7 +88,7 @@ class _StarfieldPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
-    final baseRadius = math.min(size.width, size.height) / 2 - 6;
+    final baseRadius = math.min(size.width, size.height) / 2;
     final breathScale = 1.0 + (breathValue * 0.03);
     final radius = baseRadius * breathScale;
 
