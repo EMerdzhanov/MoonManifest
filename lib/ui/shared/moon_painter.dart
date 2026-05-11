@@ -11,7 +11,7 @@ class MoonPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
-    final radius = math.min(size.width, size.height) / 2;
+    final radius = math.min(size.width, size.height) / 2 - 6;
 
     // Dark base — visible disc slightly lighter than background
     const darkSideColor = Color(0xFF252D4A);
