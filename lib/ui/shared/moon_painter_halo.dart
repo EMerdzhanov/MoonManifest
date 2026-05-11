@@ -31,13 +31,13 @@ class _HaloMoonState extends State<HaloMoon>
   void initState() {
     super.initState();
     _rotationController = AnimationController(
-      vsync: this, duration: const Duration(milliseconds: 30000),
+      vsync: this, duration: const Duration(milliseconds: 36000),
     )..repeat();
     _glowController = AnimationController(
-      vsync: this, duration: const Duration(milliseconds: 10000),
+      vsync: this, duration: const Duration(milliseconds: 12000),
     )..repeat(reverse: true);
     _sweepController = AnimationController(
-      vsync: this, duration: const Duration(milliseconds: 16000),
+      vsync: this, duration: const Duration(milliseconds: 19200),
     )..repeat();
   }
 

@@ -29,15 +29,15 @@ class _StarfieldMoonState extends State<StarfieldMoon>
     super.initState();
     _breathController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 4000),
+      duration: const Duration(milliseconds: 4800),
     )..repeat(reverse: true);
     _starController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 3000),
+      duration: const Duration(milliseconds: 3600),
     )..repeat(reverse: true);
     _glowController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 6000),
+      duration: const Duration(milliseconds: 7200),
     )..repeat(reverse: true);
   }
 

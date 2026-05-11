@@ -30,7 +30,7 @@ class _AuraMoonState extends State<AuraMoon>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 20000),
+      duration: const Duration(milliseconds: 24000),
     )..repeat();
   }
 
