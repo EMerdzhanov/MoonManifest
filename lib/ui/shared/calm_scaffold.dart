@@ -25,8 +25,10 @@ class CalmScaffold extends StatelessWidget {
           child: Stack(
             children: [
               // Body fills full height — moon effects can extend behind the icon bar
+              // Top padding pushes content below the floating icon bar
               Column(
                 children: [
+                  if (showSettings) const SizedBox(height: 56),
                   Expanded(child: body),
                   if (showSettings) ...[
                     const CycleProgressBar(),
