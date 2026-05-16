@@ -70,7 +70,7 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 16),
+                const SizedBox(height: 80),
                 MoonPhaseIndicator(
                   illumination: state.illumination,
                   phase: state.phase,

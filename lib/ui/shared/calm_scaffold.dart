@@ -28,7 +28,6 @@ class CalmScaffold extends StatelessWidget {
               // Top padding pushes content below the floating icon bar
               Column(
                 children: [
-                  if (showSettings) const SizedBox(height: 68),
                   Expanded(child: body),
                   if (showSettings) ...[
                     const CycleProgressBar(),

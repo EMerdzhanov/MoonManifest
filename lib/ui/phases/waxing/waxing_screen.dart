@@ -97,7 +97,7 @@ class _WaxingScreenState extends ConsumerState<WaxingScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 16),
+                const SizedBox(height: 80),
                 MoonPhaseIndicator(
                   illumination: lunarState.illumination,
                   phase: lunarState.phase,
