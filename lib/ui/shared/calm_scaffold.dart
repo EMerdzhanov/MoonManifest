@@ -22,39 +22,50 @@ class CalmScaffold extends StatelessWidget {
           gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [AppColors.darkNavy, AppColors.deepIndigo]),
         ),
         child: SafeArea(
-          child: Column(
+          child: Stack(
             children: [
-              const Align(alignment: Alignment.topCenter, child: DebugControls()),
-              if (showSettings)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.menu_book_outlined, color: AppColors.textMuted, size: 22),
-                        onPressed: () => Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => const ManifestationGuideScreen()),
-                        ),
+              // Body fills full height — moon effects can extend behind the icon bar
+              Column(
+                children: [
+                  Expanded(child: body),
+                  if (showSettings) ...[
+                    const CycleProgressBar(),
+                    const SizedBox(height: 8),
+                  ],
+                ],
+              ),
+              // Icon bar floats on top, transparent background
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Align(alignment: Alignment.topCenter, child: DebugControls()),
+                  if (showSettings)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.menu_book_outlined, color: AppColors.textMuted, size: 22),
+                            onPressed: () => Navigator.of(context).push(
+                              MaterialPageRoute(builder: (_) => const ManifestationGuideScreen()),
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.dark_mode_outlined, color: AppColors.textMuted, size: 22),
+                            onPressed: () => Navigator.of(context).push(
+                              MaterialPageRoute(builder: (_) => const LunarCycleScreen()),
+                            ),
+                          ),
+                          if (onHistoryTap != null)
+                            IconButton(icon: const Icon(Icons.auto_stories_outlined, color: AppColors.textMuted, size: 22), onPressed: onHistoryTap),
+                          if (onSettingsTap != null)
+                            IconButton(icon: const Icon(Icons.settings_outlined, color: AppColors.textMuted, size: 22), onPressed: onSettingsTap),
+                        ],
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.dark_mode_outlined, color: AppColors.textMuted, size: 22),
-                        onPressed: () => Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => const LunarCycleScreen()),
-                        ),
-                      ),
-                      if (onHistoryTap != null)
-                        IconButton(icon: const Icon(Icons.auto_stories_outlined, color: AppColors.textMuted, size: 22), onPressed: onHistoryTap),
-                      if (onSettingsTap != null)
-                        IconButton(icon: const Icon(Icons.settings_outlined, color: AppColors.textMuted, size: 22), onPressed: onSettingsTap),
-                    ],
-                  ),
-                ),
-              Expanded(child: body),
-              if (showSettings) ...[
-                const CycleProgressBar(),
-                const SizedBox(height: 8),
-              ],
+                    ),
+                ],
+              ),
             ],
           ),
         ),
