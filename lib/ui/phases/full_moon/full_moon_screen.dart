@@ -257,7 +257,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 72),
+          const SizedBox(height: 83),
           MoonPhaseIndicator(
             illumination: ref.watch(lunarStateProvider).valueOrNull?.illumination ?? 1.0,
             phase: MoonPhase.fullMoon,
