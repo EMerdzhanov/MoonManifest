@@ -54,7 +54,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
         setState(() => _speechAvailable = available);
       }
     } catch (e) {
-      debugPrint('Speech init failed: $e');
+      assert(() { debugPrint('Speech init failed: $e'); return true; }());
       _speechAvailable = false;
     }
   }
@@ -92,7 +92,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
           listenOptions: stt.SpeechListenOptions(partialResults: false),
         );
       } catch (e) {
-        debugPrint('Speech listen failed: $e');
+        assert(() { debugPrint('Speech listen failed: $e'); return true; }());
         setState(() => _isListening = false);
       }
     }

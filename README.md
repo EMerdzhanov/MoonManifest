@@ -1,17 +1,41 @@
-# moon_manifest
+# Moon Manifest
 
-A new Flutter project.
+A manifestation practice app synchronized to the lunar cycle. Set intentions at the new moon, express gratitude at the full moon, and reflect during the waxing and waning phases.
+
+## Features
+
+- **New Moon**: Set up to 7 intentions for the lunar cycle
+- **Waxing Phase**: Focus on your intentions with breathing exercises
+- **Full Moon**: Express gratitude through text or voice input
+- **Waning Phase**: Reflect and release with daily wisdom quotes
+- **Cycle History**: Review past cycles and track your practice
+- **iOS Widget**: Live moon phase display on your home screen
+- **Notifications**: Configurable reminders throughout the day
+- **Privacy-first**: All data stored locally with AES-256 encrypted export
+
+## Tech Stack
+
+- Flutter (iOS & Android)
+- Riverpod for state management
+- GoRouter for navigation
+- Jean Meeus algorithm for accurate moon phase calculation
+- WidgetKit (iOS home screen widget)
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+```bash
+flutter pub get
+flutter run
+```
 
-A few resources to get you started if this is your first Flutter project:
+## Building for Release
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+### Android
+```bash
+flutter build appbundle --release
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### iOS
+```bash
+flutter build ios --release
+```
