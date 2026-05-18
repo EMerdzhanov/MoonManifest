@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:moon_manifest/core/moon/moon_phase.dart';
 import 'package:moon_manifest/core/moon/moon_phase_engine.dart';
 import 'package:moon_manifest/core/notifications/notification_scheduler.dart';
+import 'package:moon_manifest/core/widget/widget_service.dart';
 import 'package:moon_manifest/data/models/lunar_state.dart';
 import 'package:moon_manifest/providers/cycle_provider.dart';
 import 'package:moon_manifest/providers/settings_provider.dart';
@@ -77,6 +78,13 @@ class LunarStateNotifier extends AsyncNotifier<LunarState> {
       );
     } catch (_) {
       // Notification scheduling can fail in simulator or with timezone issues.
+    }
+
+    // Update iOS home screen widget with current moon phase data.
+    try {
+      await WidgetService.updateWidgetFromPhaseInfo(phaseInfo);
+    } catch (_) {
+      // Widget update can fail in simulator or if widget extension is not set up.
     }
 
     return lunarState;
