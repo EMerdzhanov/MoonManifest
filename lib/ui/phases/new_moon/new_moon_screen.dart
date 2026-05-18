@@ -125,7 +125,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 92),
+          const SizedBox(height: 101),
           MoonPhaseIndicator(
             illumination: lunarState.illumination as double,
             phase: MoonPhase.newMoon,
@@ -387,7 +387,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 92),
+          const SizedBox(height: 101),
           MoonPhaseIndicator(
             illumination: lunarState.illumination as double,
             phase: MoonPhase.newMoon,
