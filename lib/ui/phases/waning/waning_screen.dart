@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:moon_manifest/core/wisdom/daily_wisdom.dart';
 import 'package:moon_manifest/providers/lunar_state_provider.dart';
 import 'package:moon_manifest/theme/app_colors.dart';
 import 'package:moon_manifest/ui/shared/calm_scaffold.dart';
@@ -152,7 +153,9 @@ class WaningScreen extends ConsumerWidget {
                             fontWeight: FontWeight.w600,
                           ),
                 ),
-                const Spacer(flex: 4),
+                const Spacer(flex: 2),
+                _DailyWisdomWidget(dayInPhase: state.dayInPhase),
+                const Spacer(flex: 2),
                 GestureDetector(
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
@@ -175,6 +178,52 @@ class WaningScreen extends ConsumerWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _DailyWisdomWidget extends StatelessWidget {
+  final int dayInPhase;
+
+  const _DailyWisdomWidget({required this.dayInPhase});
+
+  @override
+  Widget build(BuildContext context) {
+    final quote = DailyWisdom.forDay(dayInPhase);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '\u201c${quote.text}\u201d',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontFamily: 'CormorantGaramond',
+              fontSize: 17,
+              fontStyle: FontStyle.italic,
+              fontWeight: FontWeight.w400,
+              color: Color(0xFFD4A574),
+              height: 1.55,
+            ).apply(color: AppColors.mutedGold.withValues(alpha: 0.75)),
+          ),
+          if (quote.author != null) ...[
+            const SizedBox(height: 8),
+            Text(
+              '\u2014 ${quote.author}',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 11,
+                fontWeight: FontWeight.w400,
+                color: AppColors.textMuted,
+                letterSpacing: 0.4,
+              ).apply(color: AppColors.textMuted.withValues(alpha: 0.7)),
+            ),
+          ],
+        ],
       ),
     );
   }
