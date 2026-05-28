@@ -120,6 +120,20 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
 
+          // Language section
+          _SectionCard(
+            title: l10n.settingsLanguage,
+            children: [
+              Text(
+                l10n.settingsLanguageDescription,
+                style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
+              ),
+              const SizedBox(height: 12),
+              _LanguagePicker(currentLocale: settings.locale),
+            ],
+          ),
+          const SizedBox(height: 16),
+
           // Data section
           _SectionCard(
             title: l10n.settingsData,
@@ -491,6 +505,143 @@ class _MoonStylePicker extends ConsumerWidget {
           ),
         );
       }).toList(),
+    );
+  }
+}
+
+class _LanguagePicker extends ConsumerWidget {
+  final String? currentLocale;
+
+  const _LanguagePicker({required this.currentLocale});
+
+  // Language code -> native display name (always shown in native script)
+  static const _languages = [
+    (null, 'Device default'), // will be replaced with l10n key
+    ('en', 'English'),
+    ('bg', '\u0411\u044a\u043b\u0433\u0430\u0440\u0441\u043a\u0438'),
+    ('de', 'Deutsch'),
+    ('es', 'Espa\u00f1ol'),
+    ('fr', 'Fran\u00e7ais'),
+    ('hi', '\u0939\u093f\u0928\u094d\u0926\u0940'),
+    ('ja', '\u65e5\u672c\u8a9e'),
+    ('pt', 'Portugu\u00eas'),
+    ('ru', '\u0420\u0443\u0441\u0441\u043a\u0438\u0439'),
+    ('tr', 'T\u00fcrk\u00e7e'),
+    ('zh', '\u4e2d\u6587'),
+  ];
+
+  String _currentDisplayName(AppLocalizations l10n) {
+    if (currentLocale == null) return l10n.settingsDeviceDefault;
+    for (final (code, name) in _languages) {
+      if (code == currentLocale) return name;
+    }
+    return currentLocale!;
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return GestureDetector(
+      onTap: () => _showLanguageSheet(context, ref, l10n),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: AppColors.midNavy,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: AppColors.textMuted),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.language, size: 18, color: AppColors.mutedGold),
+            const SizedBox(width: 10),
+            Text(
+              _currentDisplayName(l10n),
+              style: const TextStyle(
+                color: AppColors.textPrimary,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const Spacer(),
+            const Icon(Icons.keyboard_arrow_down, size: 18, color: AppColors.textMuted),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showLanguageSheet(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.darkNavy,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 12, 0, 8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Drag handle
+                Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: AppColors.textMuted.withValues(alpha: 0.4),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      l10n.settingsLanguage,
+                      style: const TextStyle(
+                        color: AppColors.mutedGold,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                ..._languages.map((entry) {
+                  final (code, nativeName) = entry;
+                  final isSelected = currentLocale == code;
+                  final displayName = code == null ? l10n.settingsDeviceDefault : nativeName;
+
+                  return ListTile(
+                    dense: true,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                    title: Text(
+                      displayName,
+                      style: TextStyle(
+                        color: isSelected ? AppColors.mutedGold : AppColors.textPrimary,
+                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                        fontSize: 15,
+                      ),
+                    ),
+                    trailing: isSelected
+                        ? const Icon(Icons.check, size: 18, color: AppColors.mutedGold)
+                        : null,
+                    onTap: () {
+                      ref.read(settingsProvider.notifier).setLocale(code);
+                      Navigator.of(ctx).pop();
+                    },
+                  );
+                }),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

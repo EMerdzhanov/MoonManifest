@@ -386,6 +386,10 @@
   "languageHi": "\u0939\u093f\u0928\u094d\u0926\u0940",
   "languageTr": "T\u00fcrk\u00e7e",
 
+  "settingsLanguage": "Language",
+  "settingsLanguageDescription": "Choose the app language",
+  "settingsDeviceDefault": "Device default",
+
   "wisdom1": "What you seek is seeking you.",
   "wisdom1Author": "Rumi",
   "wisdom2": "The universe is not outside of you. Look inside yourself; everything that you want, you already are.",

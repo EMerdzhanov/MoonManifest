@@ -1484,6 +1484,24 @@ abstract class AppLocalizations {
   /// **'Türkçe'**
   String get languageTr;
 
+  /// No description provided for @settingsLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settingsLanguage;
+
+  /// No description provided for @settingsLanguageDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the app language'**
+  String get settingsLanguageDescription;
+
+  /// No description provided for @settingsDeviceDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Device default'**
+  String get settingsDeviceDefault;
+
   /// No description provided for @wisdom1.
   ///
   /// In en, this message translates to:

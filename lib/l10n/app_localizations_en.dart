@@ -800,6 +800,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get languageTr => 'Türkçe';
 
   @override
+  String get settingsLanguage => 'Language';
+
+  @override
+  String get settingsLanguageDescription => 'Choose the app language';
+
+  @override
+  String get settingsDeviceDefault => 'Device default';
+
+  @override
   String get wisdom1 => 'What you seek is seeking you.';
 
   @override
