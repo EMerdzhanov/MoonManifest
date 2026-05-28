@@ -1,0 +1,438 @@
+{
+  "@@locale": "en",
+
+  "onboardingWelcomeTitle": "Welcome to\nMoon Manifest",
+  "onboardingWelcomeBody": "This app guides a manifestation practice tied to the moon.",
+  "onboardingCycleTitle": "The Cycle",
+  "onboardingCycleBody": "Each lunar month flows through four distinct phases, each with its own energy.",
+  "onboardingWhatYouDoTitle": "What You'll Do",
+  "onboardingNewMoonDesc": "Set intentions and plant seeds for new beginnings.",
+  "onboardingWaxingDesc": "Take action and build momentum toward your goals.",
+  "onboardingFullMoonDesc": "Celebrate wins and release what no longer serves you.",
+  "onboardingWaningDesc": "Reflect, rest, and integrate lessons learned.",
+  "onboardingPreferencesTitle": "Your Preferences",
+  "onboardingPreferencesSubtitle": "Customize how and when you receive guidance.",
+  "onboardingNotificationFrequency": "Notification Frequency",
+  "onboardingNotificationFrequencyHint": "How many times per day do you want to be reminded?",
+  "onboardingFrequencyPerDay": "{count} / day",
+  "@onboardingFrequencyPerDay": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingWakeWindow": "Wake Window",
+  "onboardingWakeWindowHint": "No notifications outside these hours.",
+  "onboardingWakeUp": "Wake Up",
+  "onboardingWindDown": "Wind Down",
+  "onboardingButtonContinue": "Continue",
+  "onboardingButtonBegin": "Begin",
+
+  "waitingWindowNotOpen": "The manifestation window is not yet open",
+  "waitingFirstCycle": "Your first cycle begins at the new moon on {date}.",
+  "@waitingFirstCycle": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "waitingDaysAway": "{count, plural, =1{day away} other{days away}}",
+  "@waitingDaysAway": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "waitingPrepareTitle": "Prepare while you wait",
+  "waitingLearnManifest": "Learn how to manifest",
+  "waitingLearnManifestSubtitle": "The 4 rules that make this practice work",
+  "waitingUnderstandCycle": "Understand the lunar cycle",
+  "waitingUnderstandCycleSubtitle": "See where you are and what each phase means",
+  "waitingDraftIntentionsTitle": "Draft your intentions",
+  "waitingDraftIntentionsBody": "Use this space to reflect and prepare. What do you wish to call in?",
+  "waitingIntentionHint": "Intention {number}\u2026",
+  "@waitingIntentionHint": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "waitingAddIntention": "Add intention",
+  "waitingMaxIntentionsMessage": "Seven intentions is a meaningful number. Take care to choose what matters most.",
+  "waitingDraftSaved": "Draft saved",
+
+  "commonSomethingWentWrong": "Something went wrong.",
+
+  "newMoonSetIntentions": "New Moon.\nSet your intentions.",
+  "newMoonGracePeriodEnds": "Grace period ends {deadline}",
+  "@newMoonGracePeriodEnds": {
+    "placeholders": {
+      "deadline": {
+        "type": "String"
+      }
+    }
+  },
+  "newMoonGuidancePrompt": "Ask yourself: What do I truly need beneath my desires? Set intentions that speak to your underlying needs \u2014 growth, connection, peace, abundance.",
+  "newMoonHowToWrite": "How to write powerful intentions",
+  "newMoonYourIntentions": "Your Intentions",
+  "newMoonIntentionHint": "Intention {number}\u2026",
+  "@newMoonIntentionHint": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "newMoonAddIntention": "Add intention",
+  "newMoonMaxIntentionsMessage": "Seven intentions is a meaningful number. Take care to choose what matters most.",
+  "newMoonPlantIntentions": "Plant these intentions",
+  "newMoonLockedTitle": "These are your intentions for this cycle.",
+  "newMoonLockedSubtitleEditing": "Edit your intentions below.",
+  "newMoonLockedSubtitlePlanted": "They have been planted. Trust the process.",
+  "newMoonEditIntentionHint": "Intention {number}...",
+  "@newMoonEditIntentionHint": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "newMoonEditIntentions": "Edit intentions",
+  "newMoonEditUntilWaxing": "You can edit until the waxing phase begins.",
+  "newMoonSaveChanges": "Save changes",
+
+  "commonCancel": "Cancel",
+  "commonOk": "OK",
+
+  "waxingDayOfWaxing": "Day {day} of waxing.",
+  "@waxingDayOfWaxing": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "waxingFullMoonTomorrow": "Full moon tomorrow.",
+  "waxingFullMoonInDays": "Full moon in {count} days.",
+  "@waxingFullMoonInDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "waxingYourIntentions": "Your Intentions",
+  "waxingUnableToLoad": "Unable to load intentions.",
+  "waxingNoIntentionsFound": "No intentions found for this cycle.",
+
+  "fullMoonNoIntentionsSet": "No intentions were set this cycle",
+  "fullMoonWorkDone": "The work is done.",
+  "fullMoonNowRelease": "Now release.",
+  "fullMoonWaningNext": "The waning phase begins soon.\nYour next cycle starts at the new moon on {date}.",
+  "@fullMoonWaningNext": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "fullMoonGiveThanks": "Full Moon. Give thanks.",
+  "fullMoonGracePeriodActive": "Grace period active",
+  "fullMoonThankUniverse": "Thank the universe as if you already have what you asked for",
+  "fullMoonProgressOf": "{current} of {total}",
+  "@fullMoonProgressOf": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "fullMoonGratitudeHint": "I am so grateful that\u2026",
+  "fullMoonCompleteCeremony": "Complete ceremony",
+  "fullMoonNextIntention": "Next intention",
+
+  "waningWindowClosed": "Manifestation window closed",
+  "waningOpensAgain": "Opens again in {count} days at the new moon",
+  "@waningOpensAgain": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "waningReleaseTrust": "Release. Trust.",
+  "waningWorkDone": "The work is done.",
+  "waningNextNewMoon": "Next new moon",
+  "waningWhyQuiet": "Why is it quiet?",
+
+  "philosophyTitle": "Why Is the Window\nClosed Right Now?",
+  "philosophyBody1": "Manifestation doesn't work on your schedule \u2014 it works on the moon's. The lunar cycle has specific windows where setting intentions is powerful, and periods where the most powerful thing you can do is nothing.",
+  "philosophyBody2": "Right now, the moon is waning \u2014 shrinking toward darkness. This is the release phase. Your intentions from this cycle have been planted, tended, and offered in gratitude. Now they need space to take root. Pushing harder during this phase doesn't help. It interferes.",
+  "philosophyBody3": "When the new moon arrives, the window opens again. That's when you set fresh intentions and begin a new cycle. The wait isn't wasted time \u2014 it's part of the practice. The discipline of release is what separates manifestation from wishing.",
+  "philosophyDaysUntilOpen": "days until the window opens",
+  "philosophyReminderSetFor": "Reminder set for {date}",
+  "@philosophyReminderSetFor": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "philosophyRemindMe": "Remind me when it opens",
+  "philosophyCouldNotSchedule": "Could not schedule reminder",
+  "philosophyNotificationTitle": "The manifestation window is open.",
+  "philosophyNotificationBody": "Set your intentions now.",
+  "philosophyHookTitle": "What They Know\nThat You Don't",
+  "philosophyHookBody1": "The most successful people on earth don't just set goals. They work with timing. They understand something most people never will: that the universe has a rhythm, and those who align with it don't chase results \u2014 results chase them.",
+  "philosophyHookBody2": "This is not a secret. It is ancient knowledge \u2014 practiced for thousands of years by those who shaped empires, built dynasties, and quietly moved the world. The moon was their clock. \"I AM\" was their language. And commitment was their price.",
+  "philosophyHookBody3": "Here is what they understood: manifestation is simple. Not easy \u2014 simple. You declare what you are becoming. You repeat it until your mind believes it. You give thanks before you see proof. And then you let go. Completely.",
+  "philosophyHookBody4": "Most people fail because they won't commit to the process. They want the result without the discipline. They manifest for a day, check for signs, and quit when nothing happens by Tuesday. That is not manifestation. That is wishing.",
+  "philosophyMoonHeading": "The Moon Is the Missing Piece",
+  "philosophyMoonBody1": "You've probably tried affirmations before. You've probably said \"I am abundant\" in the mirror and felt nothing change. That's because you were speaking into dead air \u2014 no timing, no structure, no cosmic alignment behind your words.",
+  "philosophyMoonBody2": "The moon changes everything. It gives your practice a cycle \u2014 a beginning, a middle, a peak, and a release. When you set intentions at the new moon, you're not just writing wishes. You're planting seeds in the only soil that has been moving oceans since before humans existed.",
+  "philosophyMoonBody3": "The waning moon is not a pause. It is the most demanding phase of all. Anyone can ask. Anyone can repeat. But to release \u2014 to truly let go and trust that what you planted is growing in darkness \u2014 that requires the discipline this practice was built on.",
+  "philosophyFourPhasesHeading": "The Four Sacred Phases",
+  "philosophyPhasePlanting": "The Planting",
+  "philosophyPhasePlantingDesc": "In darkness, you name what you need \u2014 not what you want, but what your soul requires. The new moon holds space for raw truth.",
+  "philosophyPhaseTending": "The Tending",
+  "philosophyPhaseTendingDesc": "As light returns, you repeat your intentions daily. Not as hope, but as certainty. You are not asking \u2014 you are remembering what is already on its way.",
+  "philosophyPhaseGratitude": "The Gratitude",
+  "philosophyPhaseGratitudeDesc": "At full illumination, you give thanks as though you already hold what you asked for. This is not pretending. This is the act that collapses the distance between where you are and where you are going.",
+  "philosophyPhaseRelease": "The Release",
+  "philosophyPhaseReleaseDesc": "And then \u2014 silence. You let go. You stop pushing, stop checking, stop asking. The waning moon teaches the hardest lesson: that your work is done, and now it belongs to something larger than you.",
+  "philosophyClosing": "When the moon returns to darkness,\nyou begin.",
+
+  "guideTitle": "How to Manifest",
+  "guideIntro": "Four rules. That's all. Master these and the moon will do the rest.",
+  "guideRule01": "RULE 01",
+  "guideRule01Title": "Name the Need,\nNot the Want",
+  "guideRule01Body1": "The surface desire masks the real intention. You don't actually want a million dollars \u2014 you want the feeling of safety, of freedom, of not worrying. Manifestation works on the level of feeling, not material objects.",
+  "guideRule01Body2": "Ask yourself: why do I want this? The answer is your real intention.",
+  "guideRule01Wrong1": "I want a million dollars",
+  "guideRule01Right1": "I am experiencing financial freedom",
+  "guideRule01Wrong2": "I want a partner",
+  "guideRule01Right2": "I am surrounded by deep, loving connection",
+  "guideRule01Wrong3": "I want a promotion",
+  "guideRule01Right3": "I am recognized and valued for my work",
+  "guideRule02": "RULE 02",
+  "guideRule02Title": "I AM \u2014 The Most Powerful\nWords You'll Ever Speak",
+  "guideRule02Body1": "In the Bible, when Moses asked God's name, the answer was \"I AM THAT I AM.\" Every tradition that has touched manifestation \u2014 from Hermetic philosophy to Neville Goddard to modern practice \u2014 treats \"I AM\" as the declaration that shapes reality.",
+  "guideRule02Body2": "Whatever follows \"I AM\" becomes your command to the universe. Choose carefully.",
+  "guideRule02Tip1": "Always positive \u2014 \"I am healthy\" not \"I am not sick\"",
+  "guideRule02Tip2": "Always present tense \u2014 \"I am\" not \"I will be\"",
+  "guideRule02Tip3": "Always with conviction \u2014 speak it as truth, not hope",
+  "guideRule02Right1": "I am abundant and money flows to me easily",
+  "guideRule02Right2": "I am at peace with who I am becoming",
+  "guideRule02Right3": "I am worthy of the life I am creating",
+  "guideRule03": "RULE 03",
+  "guideRule03Title": "Speak As If\nIt's Already Done",
+  "guideRule03Body1": "You don't need to know how it will happen. Your only job is to hold the vibration \u2014 the feeling \u2014 of already having what you declared.",
+  "guideRule03Body2": "The universe doesn't respond to what you want. It responds to what you are. Don't chase. Don't check for signs. Just be it.",
+  "guideRule03Wrong1": "I hope I'll find peace someday",
+  "guideRule03Right1": "I am grateful for the peace that fills my life",
+  "guideRule03Wrong2": "I'm trying to be more confident",
+  "guideRule03Right2": "I am confident. I trust myself completely.",
+  "guideRule04": "RULE 04",
+  "guideRule04Title": "Gratitude Is the Proof",
+  "guideRule04Body1": "Gratitude is not a thank-you note after the fact. It's the signal you send before you receive \u2014 proof to the universe that you trust the process.",
+  "guideRule04Body2": "When you give thanks for something you haven't seen yet, you collapse the gap between wanting and having. This is the ceremony this app guides you through at every full moon.",
+  "guideRule04Right1": "I am so grateful that financial freedom is my reality",
+  "guideRule04Right2": "Thank you for the love that surrounds me every day",
+  "guideRule04Right3": "I give thanks for my health, my strength, my clarity",
+  "guideClosing": "This is your practice.\nThe moon provides the timing.\nYou provide the truth.",
+
+  "lunarCycleTitle": "The Lunar Cycle",
+  "lunarYouAreHere": "You are here: {phase}",
+  "@lunarYouAreHere": {
+    "placeholders": {
+      "phase": {
+        "type": "String"
+      }
+    }
+  },
+  "lunarDayOfTotal": "Day {day} of {total}",
+  "@lunarDayOfTotal": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "lunarNewMoonPlant": "New Moon \u2014 Plant",
+  "lunarNewMoonPlantDesc": "Set your intentions. Name what you truly need. This is where the cycle begins.",
+  "lunarNewMoonDuration": "~1 day",
+  "lunarNewMoonStatus": "Intentions open",
+  "lunarWaxingTend": "Waxing \u2014 Tend",
+  "lunarWaxingTendDesc": "Repeat your intentions daily. Build belief through repetition. The moon grows, and so does your conviction.",
+  "lunarWaxingDuration": "~14 days",
+  "lunarWaxingStatus": "Daily reminders active",
+  "lunarFullMoonGiveThanks": "Full Moon \u2014 Give Thanks",
+  "lunarFullMoonGiveThanksDesc": "Express gratitude as if you already have what you asked for. This is the peak \u2014 the moment of receiving.",
+  "lunarFullMoonDuration": "~1 day",
+  "lunarFullMoonStatus": "Gratitude ceremony",
+  "lunarWaningRelease": "Waning \u2014 Release",
+  "lunarWaningReleaseDesc": "Let go completely. Stop pushing, stop checking. Trust that what you planted is growing in the dark.",
+  "lunarWaningDuration": "~14 days",
+  "lunarWaningStatus": "Window closed \u2014 silence",
+  "lunarLegendManifest": "Manifest",
+  "lunarLegendRelease": "Release",
+  "lunarThisCycle": "This Cycle",
+  "lunarNow": "NOW",
+
+  "cycleDiagramNewMoon": "New Moon",
+  "cycleDiagramWaxingCrescent": "Waxing\nCrescent",
+  "cycleDiagramFirstQuarter": "First\nQuarter",
+  "cycleDiagramWaxingGibbous": "Waxing\nGibbous",
+  "cycleDiagramFullMoon": "Full Moon",
+  "cycleDiagramWaningGibbous": "Waning\nGibbous",
+  "cycleDiagramLastQuarter": "Last\nQuarter",
+  "cycleDiagramWaningCrescent": "Waning\nCrescent",
+  "cycleDiagramManifest": "MANIFEST",
+  "cycleDiagramRelease": "RELEASE",
+
+  "cycleThisCycle": "This Cycle",
+  "cycleSeeFullDetails": "See full cycle details",
+
+  "debugLabel": "DEBUG: {info}",
+  "@debugLabel": {
+    "placeholders": {
+      "info": {
+        "type": "String"
+      }
+    }
+  },
+  "debugLive": "live",
+
+  "settingsTitle": "Settings",
+  "settingsNotifications": "Notifications",
+  "settingsReminderFrequency": "Reminder frequency (times per day)",
+  "settingsWakeWindow": "Wake window",
+  "settingsWakeWindowStart": "Start",
+  "settingsWakeWindowEnd": "End",
+  "settingsMoonStyle": "Moon Style",
+  "settingsMoonStyleDescription": "Choose how the moon looks throughout the app",
+  "settingsMoonStyleClassic": "Classic",
+  "settingsMoonStyleStarfield": "Starfield",
+  "settingsMoonStyleAura": "Aura",
+  "settingsMoonStyleHalo": "Halo",
+  "settingsData": "Data",
+  "settingsExportData": "Export Data",
+  "settingsImportData": "Import Data",
+  "settingsAbout": "About",
+  "settingsAboutDescription": "Moon Manifest is a personal ritual companion designed to help you align your intentions with the lunar cycle. Each new moon, you set up to three intentions and spend the following 28 days nurturing them through daily gratitude and reflection. Your data is stored securely on your device and never sent to any server. Use the export feature to create an encrypted backup, and import it on a new device to restore your practice.",
+  "settingsManifestationGuide": "Manifestation Guide",
+  "settingsExportPasswordTitle": "Set Export Password",
+  "settingsImportPasswordTitle": "Enter Import Password",
+  "settingsPasswordHint": "Password",
+  "settingsExportFailed": "Export failed: {error}",
+  "@settingsExportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCouldNotReadFile": "Could not read file.",
+  "settingsDataImported": "Data imported successfully.",
+  "settingsWrongPassword": "Wrong password or corrupted file.",
+  "settingsImportFailed": "Import failed: {error}",
+  "@settingsImportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsExportSubject": "Moon Manifest Backup",
+
+  "historyTitle": "History",
+  "historyNoCompletedCycles": "No completed cycles yet",
+  "historyOngoing": "Ongoing",
+  "historyIntentionCount": "{count, plural, =1{1 intention} other{{count} intentions}}",
+  "@historyIntentionCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "historyIntentionsLabel": "Intentions",
+  "historyGratitudesLabel": "Gratitudes",
+
+  "phaseNewMoon": "New Moon",
+  "phaseWaxing": "Waxing",
+  "phaseFullMoon": "Full Moon",
+  "phaseWaning": "Waning",
+
+  "languageEn": "English",
+  "languageBg": "\u0411\u044a\u043b\u0433\u0430\u0440\u0441\u043a\u0438",
+  "languageEs": "Espa\u00f1ol",
+  "languagePt": "Portugu\u00eas",
+  "languageDe": "Deutsch",
+  "languageFr": "Fran\u00e7ais",
+  "languageRu": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439",
+  "languageZh": "\u4e2d\u6587",
+  "languageJa": "\u65e5\u672c\u8a9e",
+  "languageHi": "\u0939\u093f\u0928\u094d\u0926\u0940",
+  "languageTr": "T\u00fcrk\u00e7e",
+
+  "wisdom1": "What you seek is seeking you.",
+  "wisdom1Author": "Rumi",
+  "wisdom2": "The universe is not outside of you. Look inside yourself; everything that you want, you already are.",
+  "wisdom2Author": "Rumi",
+  "wisdom3": "Trust the wait. Embrace the uncertainty.",
+  "wisdom4": "You don't attract what you want. You attract what you are.",
+  "wisdom5": "When I let go of what I am, I become what I might be.",
+  "wisdom5Author": "Lao Tzu",
+  "wisdom6": "Nature does not hurry, yet everything is accomplished.",
+  "wisdom6Author": "Lao Tzu",
+  "wisdom7": "Assume the feeling of your wish fulfilled and observe the route that your attention follows.",
+  "wisdom7Author": "Neville Goddard",
+  "wisdom8": "Man's chief delusion is his conviction that there are causes other than his own state of consciousness.",
+  "wisdom8Author": "Neville Goddard",
+  "wisdom9": "You are always a student, never a master. You have to keep moving forward.",
+  "wisdom9Author": "Conrad Hall",
+  "wisdom10": "Stop acting so small. You are the universe in ecstatic motion.",
+  "wisdom10Author": "Rumi",
+  "wisdom11": "The present moment always will have been. Rest in that.",
+  "wisdom12": "Letting go gives us freedom, and freedom is the only condition for happiness.",
+  "wisdom12Author": "Thich Nhat Hanh",
+  "wisdom13": "Surrender is not giving up. It is giving over to something greater.",
+  "wisdom14": "You have within you right now, everything you need to deal with whatever the world can throw at you.",
+  "wisdom14Author": "Brian Tracy",
+  "wisdom15": "The quieter you become, the more you are able to hear.",
+  "wisdom15Author": "Rumi",
+  "wisdom16": "Your task is not to seek for love, but merely to seek and find all the barriers within yourself that you have built against it.",
+  "wisdom16Author": "Rumi",
+  "wisdom17": "Faith is taking the first step even when you don't see the whole staircase.",
+  "wisdom17Author": "Martin Luther King Jr.",
+  "wisdom18": "The seed does not fight the soil. It simply grows.",
+  "wisdom19": "Release the need to know how. Trust that the universe knows the way.",
+  "wisdom20": "Begin to see yourself as a soul with a body rather than a body with a soul.",
+  "wisdom20Author": "Wayne Dyer",
+  "wisdom21": "You cannot always control what goes on outside. But you can always control what goes on inside.",
+  "wisdom21Author": "Wayne Dyer",
+  "wisdom22": "Patience is not passive waiting. It is active trust.",
+  "wisdom23": "Everything you need is already within you, waiting to unfold.",
+  "wisdom24": "The moon does not fight. It watches. And in watching, it holds everything together.",
+  "wisdom25": "Act as if what you intend to manifest in life is already a reality.",
+  "wisdom25Author": "Wayne Dyer",
+  "wisdom26": "Be still and know.",
+  "wisdom27": "Let go of the branches and trust the river.",
+  "wisdom28": "The wound is the place where the light enters you.",
+  "wisdom28Author": "Rumi",
+  "wisdom29": "A ship in a harbor is safe, but that is not what ships are built for.",
+  "wisdom29Author": "John A. Shedd",
+  "wisdom30": "The universe is always speaking to us. Sending us little messages, causing coincidences and serendipities. The only question is: are we listening?",
+  "wisdom30Author": "Nancy Thayer"
+}
