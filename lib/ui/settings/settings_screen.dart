@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:moon_manifest/core/crypto/export_crypto.dart';
 import 'package:moon_manifest/data/repositories/export_repository.dart';
+import 'package:moon_manifest/l10n/app_localizations.dart';
 import 'package:moon_manifest/providers/cycle_provider.dart';
 import 'package:moon_manifest/providers/settings_provider.dart';
 import 'package:moon_manifest/theme/app_colors.dart';
@@ -23,6 +24,7 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final settings = ref.watch(settingsProvider);
 
     return Scaffold(
@@ -30,9 +32,9 @@ class SettingsScreen extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: AppColors.darkNavy,
         leading: const BackButton(color: AppColors.moonSilver),
-        title: const Text(
-          'Settings',
-          style: TextStyle(color: AppColors.moonWhite, fontWeight: FontWeight.w600),
+        title: Text(
+          l10n.settingsTitle,
+          style: const TextStyle(color: AppColors.moonWhite, fontWeight: FontWeight.w600),
         ),
         elevation: 0,
       ),
@@ -41,11 +43,11 @@ class SettingsScreen extends ConsumerWidget {
         children: [
           // Notifications section
           _SectionCard(
-            title: 'Notifications',
+            title: l10n.settingsNotifications,
             children: [
-              const Text(
-                'Reminder frequency (times per day)',
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+              Text(
+                l10n.settingsReminderFrequency,
+                style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
               ),
               const SizedBox(height: 12),
               Row(
@@ -55,7 +57,7 @@ class SettingsScreen extends ConsumerWidget {
                     padding: const EdgeInsets.only(right: 10),
                     child: ChoiceChip(
                       label: Text(
-                        '$freq×',
+                        '$freq\u00d7',
                         style: TextStyle(
                           color: selected ? AppColors.deepIndigo : AppColors.textPrimary,
                           fontWeight: FontWeight.w600,
@@ -72,16 +74,16 @@ class SettingsScreen extends ConsumerWidget {
                 }).toList(),
               ),
               const SizedBox(height: 20),
-              const Text(
-                'Wake window',
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+              Text(
+                l10n.settingsWakeWindow,
+                style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
               ),
               const SizedBox(height: 12),
               Row(
                 children: [
                   Expanded(
                     child: _TimePickerButton(
-                      label: 'Start',
+                      label: l10n.settingsWakeWindowStart,
                       value: settings.wakeWindowStart,
                       onPicked: (time) {
                         ref.read(settingsProvider.notifier).setWakeWindow(time, settings.wakeWindowEnd);
@@ -91,7 +93,7 @@ class SettingsScreen extends ConsumerWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: _TimePickerButton(
-                      label: 'End',
+                      label: l10n.settingsWakeWindowEnd,
                       value: settings.wakeWindowEnd,
                       onPicked: (time) {
                         ref.read(settingsProvider.notifier).setWakeWindow(settings.wakeWindowStart, time);
@@ -106,11 +108,11 @@ class SettingsScreen extends ConsumerWidget {
 
           // Moon style section
           _SectionCard(
-            title: 'Moon Style',
+            title: l10n.settingsMoonStyle,
             children: [
-              const Text(
-                'Choose how the moon looks throughout the app',
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+              Text(
+                l10n.settingsMoonStyleDescription,
+                style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
               ),
               const SizedBox(height: 16),
               const _MoonStylePicker(),
@@ -120,17 +122,17 @@ class SettingsScreen extends ConsumerWidget {
 
           // Data section
           _SectionCard(
-            title: 'Data',
+            title: l10n.settingsData,
             children: [
               _ActionButton(
                 icon: Icons.upload_outlined,
-                label: 'Export Data',
+                label: l10n.settingsExportData,
                 onPressed: () => _handleExport(context, ref),
               ),
               const SizedBox(height: 12),
               _ActionButton(
                 icon: Icons.download_outlined,
-                label: 'Import Data',
+                label: l10n.settingsImportData,
                 onPressed: () => _handleImport(context, ref),
               ),
             ],
@@ -139,14 +141,11 @@ class SettingsScreen extends ConsumerWidget {
 
           // About section
           _SectionCard(
-            title: 'About',
+            title: l10n.settingsAbout,
             children: [
-              const Text(
-                'Moon Manifest is a personal ritual companion designed to help you align your intentions with the lunar cycle. '
-                'Each new moon, you set up to three intentions and spend the following 28 days nurturing them through daily gratitude '
-                'and reflection. Your data is stored securely on your device and never sent to any server. '
-                'Use the export feature to create an encrypted backup, and import it on a new device to restore your practice.',
-                style: TextStyle(
+              Text(
+                l10n.settingsAboutDescription,
+                style: const TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 14,
                   height: 1.6,
@@ -162,7 +161,7 @@ class SettingsScreen extends ConsumerWidget {
                     const Icon(Icons.menu_book_outlined, size: 18, color: AppColors.mutedGold),
                     const SizedBox(width: 8),
                     Text(
-                      'Manifestation Guide',
+                      l10n.settingsManifestationGuide,
                       style: TextStyle(
                         color: AppColors.mutedGold,
                         fontSize: 14,
@@ -182,7 +181,8 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   Future<void> _handleExport(BuildContext context, WidgetRef ref) async {
-    final password = await _showPasswordDialog(context, title: 'Set Export Password');
+    final l10n = AppLocalizations.of(context)!;
+    final password = await _showPasswordDialog(context, title: l10n.settingsExportPasswordTitle);
     if (password == null || password.isEmpty) return;
 
     try {
@@ -195,13 +195,13 @@ class SettingsScreen extends ConsumerWidget {
 
       await Share.shareXFiles(
         [XFile(file.path, mimeType: 'application/octet-stream')],
-        subject: 'Moon Manifest Backup',
+        subject: l10n.settingsExportSubject,
       );
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Export failed: $e'),
+            content: Text(l10n.settingsExportFailed(e.toString())),
             backgroundColor: AppColors.error,
           ),
         );
@@ -210,6 +210,7 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   Future<void> _handleImport(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context)!;
     final result = await FilePicker.platform.pickFiles(
       type: FileType.any,
       withData: true,
@@ -221,8 +222,8 @@ class SettingsScreen extends ConsumerWidget {
     if (fileBytes == null) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Could not read file.'),
+          SnackBar(
+            content: Text(l10n.settingsCouldNotReadFile),
             backgroundColor: AppColors.error,
           ),
         );
@@ -231,7 +232,7 @@ class SettingsScreen extends ConsumerWidget {
     }
 
     if (!context.mounted) return;
-    final password = await _showPasswordDialog(context, title: 'Enter Import Password');
+    final password = await _showPasswordDialog(context, title: l10n.settingsImportPasswordTitle);
     if (password == null || password.isEmpty) return;
 
     try {
@@ -240,8 +241,8 @@ class SettingsScreen extends ConsumerWidget {
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Data imported successfully.'),
+          SnackBar(
+            content: Text(l10n.settingsDataImported),
             backgroundColor: AppColors.success,
           ),
         );
@@ -249,8 +250,8 @@ class SettingsScreen extends ConsumerWidget {
     } on ExportCryptoException {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Wrong password or corrupted file.'),
+          SnackBar(
+            content: Text(l10n.settingsWrongPassword),
             backgroundColor: AppColors.error,
           ),
         );
@@ -259,7 +260,7 @@ class SettingsScreen extends ConsumerWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Import failed: $e'),
+            content: Text(l10n.settingsImportFailed(e.toString())),
             backgroundColor: AppColors.error,
           ),
         );
@@ -268,6 +269,7 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   Future<String?> _showPasswordDialog(BuildContext context, {required String title}) async {
+    final l10n = AppLocalizations.of(context)!;
     final controller = TextEditingController();
     return showDialog<String>(
       context: context,
@@ -279,13 +281,13 @@ class SettingsScreen extends ConsumerWidget {
           obscureText: true,
           autofocus: true,
           style: const TextStyle(color: AppColors.textPrimary),
-          decoration: const InputDecoration(
-            hintText: 'Password',
-            hintStyle: TextStyle(color: AppColors.textMuted),
-            enabledBorder: UnderlineInputBorder(
+          decoration: InputDecoration(
+            hintText: l10n.settingsPasswordHint,
+            hintStyle: const TextStyle(color: AppColors.textMuted),
+            enabledBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: AppColors.textMuted),
             ),
-            focusedBorder: UnderlineInputBorder(
+            focusedBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: AppColors.mutedGold),
             ),
           ),
@@ -293,11 +295,11 @@ class SettingsScreen extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+            child: Text(l10n.commonCancel, style: const TextStyle(color: AppColors.textSecondary)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, controller.text),
-            child: const Text('OK', style: TextStyle(color: AppColors.mutedGold)),
+            child: Text(l10n.commonOk, style: const TextStyle(color: AppColors.mutedGold)),
           ),
         ],
       ),
@@ -425,20 +427,21 @@ class _ActionButton extends StatelessWidget {
 class _MoonStylePicker extends ConsumerWidget {
   const _MoonStylePicker();
 
-  static const _styles = [
-    ('classic', 'Classic'),
-    ('starfield', 'Starfield'),
-    ('aura', 'Aura'),
-    ('halo', 'Halo'),
-  ];
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final current = ref.watch(settingsProvider.select((s) => s.moonStyle));
+
+    final styles = [
+      ('classic', l10n.settingsMoonStyleClassic),
+      ('starfield', l10n.settingsMoonStyleStarfield),
+      ('aura', l10n.settingsMoonStyleAura),
+      ('halo', l10n.settingsMoonStyleHalo),
+    ];
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: _styles.map((entry) {
+      children: styles.map((entry) {
         final (value, label) = entry;
         final selected = current == value;
         return GestureDetector(

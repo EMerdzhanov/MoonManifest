@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:moon_manifest/data/models/cycle.dart';
+import 'package:moon_manifest/l10n/app_localizations.dart';
 import 'package:moon_manifest/providers/cycle_provider.dart';
 import 'package:moon_manifest/theme/app_colors.dart';
 
@@ -10,6 +11,7 @@ class HistoryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final historyAsync = ref.watch(historyProvider);
 
     return Scaffold(
@@ -18,7 +20,7 @@ class HistoryScreen extends ConsumerWidget {
         backgroundColor: AppColors.darkNavy,
         foregroundColor: AppColors.textPrimary,
         title: Text(
-          'History',
+          l10n.historyTitle,
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 color: AppColors.textPrimary,
               ),
@@ -43,7 +45,7 @@ class HistoryScreen extends ConsumerWidget {
           ),
           error: (err, _) => Center(
             child: Text(
-              'Something went wrong.',
+              l10n.commonSomethingWentWrong,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
@@ -53,7 +55,7 @@ class HistoryScreen extends ConsumerWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 32),
                   child: Text(
-                    'No completed cycles yet',
+                    l10n.historyNoCompletedCycles,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: AppColors.textSecondary,
@@ -94,12 +96,13 @@ class _CycleCardState extends State<_CycleCard> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final cycle = widget.cycle;
     final dateFormat = DateFormat('MMM d, y');
     final startDate = dateFormat.format(cycle.newMoonDate);
     final endDate = cycle.cycleEndDate != null
         ? dateFormat.format(cycle.cycleEndDate!)
-        : 'Ongoing';
+        : l10n.historyOngoing;
 
     return GestureDetector(
       onTap: () => setState(() => _expanded = !_expanded),
@@ -135,7 +138,7 @@ class _CycleCardState extends State<_CycleCard> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '${cycle.intentions.length} ${cycle.intentions.length == 1 ? 'intention' : 'intentions'}',
+                          l10n.historyIntentionCount(cycle.intentions.length),
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                 color: AppColors.textMuted,
                               ),
@@ -158,7 +161,7 @@ class _CycleCardState extends State<_CycleCard> {
                 // Intentions section
                 if (cycle.intentions.isNotEmpty) ...[
                   Text(
-                    'Intentions',
+                    l10n.historyIntentionsLabel,
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
                           color: AppColors.mutedGold,
                           letterSpacing: 1.2,
@@ -191,7 +194,7 @@ class _CycleCardState extends State<_CycleCard> {
                 if (cycle.gratitudes.isNotEmpty) ...[
                   const SizedBox(height: 12),
                   Text(
-                    'Gratitudes',
+                    l10n.historyGratitudesLabel,
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
                           color: AppColors.mutedGold,
                           letterSpacing: 1.2,
