@@ -137,7 +137,7 @@ class _LunarCycleScreenState extends ConsumerState<LunarCycleScreen>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                l10n.lunarYouAreHere(state.phase.displayName),
+                                l10n.lunarYouAreHere(state.phase.localizedName(context)),
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyLarge

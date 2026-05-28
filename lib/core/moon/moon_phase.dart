@@ -1,3 +1,6 @@
+import 'package:flutter/widgets.dart';
+import 'package:moon_manifest/l10n/app_localizations.dart';
+
 enum MoonPhase {
   newMoon,
   waxing,
@@ -14,6 +17,20 @@ enum MoonPhase {
         return 'Full Moon';
       case MoonPhase.waning:
         return 'Waning';
+    }
+  }
+
+  String localizedName(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (this) {
+      case MoonPhase.newMoon:
+        return l10n.phaseNewMoon;
+      case MoonPhase.waxing:
+        return l10n.phaseWaxing;
+      case MoonPhase.fullMoon:
+        return l10n.phaseFullMoon;
+      case MoonPhase.waning:
+        return l10n.phaseWaning;
     }
   }
 }

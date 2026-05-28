@@ -209,7 +209,7 @@ class _CycleProgressBarState extends ConsumerState<CycleProgressBar>
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              state.phase.displayName,
+                              state.phase.localizedName(context),
                               style: const TextStyle(
                                 color: AppColors.mutedGold,
                                 fontSize: 10,

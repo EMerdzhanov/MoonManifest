@@ -192,7 +192,8 @@ class _DailyWisdomWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final quote = DailyWisdom.forDay(dayInPhase);
+    final l10n = AppLocalizations.of(context)!;
+    final quote = DailyWisdom.forDayLocalized(dayInPhase, l10n);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),

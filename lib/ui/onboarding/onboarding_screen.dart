@@ -146,7 +146,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  phase.displayName,
+                  phase.localizedName(context),
                   style: const TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 10,
@@ -203,7 +203,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          phase.displayName,
+                          phase.localizedName(context),
                           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                 color: AppColors.moonSilver,
                                 fontWeight: FontWeight.w600,
