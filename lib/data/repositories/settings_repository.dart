@@ -8,6 +8,7 @@ class SettingsRepository {
   static const _keyOnboarding = 'onboarding_complete';
   static const _keyTheme = 'theme_mode';
   static const _keyMoonStyle = 'moon_style';
+  static const _keyLocale = 'locale';
 
   final SharedPreferences _prefs;
   SettingsRepository(this._prefs);
@@ -19,6 +20,7 @@ class SettingsRepository {
     onboardingComplete: _prefs.getBool(_keyOnboarding) ?? false,
     themeMode: _prefs.getString(_keyTheme) ?? 'dark',
     moonStyle: _prefs.getString(_keyMoonStyle) ?? 'classic',
+    locale: _prefs.getString(_keyLocale),
   );
 
   Future<void> save(AppSettings settings) async {
@@ -29,11 +31,22 @@ class SettingsRepository {
       _prefs.setBool(_keyOnboarding, settings.onboardingComplete),
       _prefs.setString(_keyTheme, settings.themeMode),
       _prefs.setString(_keyMoonStyle, settings.moonStyle),
+      if (settings.locale != null)
+        _prefs.setString(_keyLocale, settings.locale!)
+      else
+        _prefs.remove(_keyLocale),
     ]);
   }
 
   Future<void> setOnboardingComplete(bool value) async => _prefs.setBool(_keyOnboarding, value);
   Future<void> setMoonStyle(String style) async => _prefs.setString(_keyMoonStyle, style);
+  Future<void> setLocale(String? locale) async {
+    if (locale != null) {
+      await _prefs.setString(_keyLocale, locale);
+    } else {
+      await _prefs.remove(_keyLocale);
+    }
+  }
   Future<void> setNotificationFrequency(int frequency) async => _prefs.setInt(_keyFrequency, frequency);
   Future<void> setWakeWindow(String start, String end) async {
     await Future.wait([

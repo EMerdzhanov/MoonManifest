@@ -40,6 +40,11 @@ class SettingsNotifier extends StateNotifier<AppSettings> {
     state = state.copyWith(moonStyle: style);
   }
 
+  Future<void> setLocale(String? locale) async {
+    await _repo.setLocale(locale);
+    state = state.copyWith(locale: () => locale);
+  }
+
   Future<void> updateSettings(AppSettings settings) async {
     await _repo.save(settings);
     state = settings;

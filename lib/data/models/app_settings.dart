@@ -5,6 +5,7 @@ class AppSettings {
   final bool onboardingComplete;
   final String themeMode;
   final String moonStyle;
+  final String? locale;
 
   const AppSettings({
     this.notificationFrequency = 3,
@@ -13,12 +14,13 @@ class AppSettings {
     this.onboardingComplete = false,
     this.themeMode = 'dark',
     this.moonStyle = 'classic',
+    this.locale,
   });
 
   AppSettings copyWith({
     int? notificationFrequency, String? wakeWindowStart,
     String? wakeWindowEnd, bool? onboardingComplete, String? themeMode,
-    String? moonStyle,
+    String? moonStyle, String? Function()? locale,
   }) => AppSettings(
     notificationFrequency: notificationFrequency ?? this.notificationFrequency,
     wakeWindowStart: wakeWindowStart ?? this.wakeWindowStart,
@@ -26,6 +28,7 @@ class AppSettings {
     onboardingComplete: onboardingComplete ?? this.onboardingComplete,
     themeMode: themeMode ?? this.themeMode,
     moonStyle: moonStyle ?? this.moonStyle,
+    locale: locale != null ? locale() : this.locale,
   );
 
   (int hour, int minute) get wakeStart {
