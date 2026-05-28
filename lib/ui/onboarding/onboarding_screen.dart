@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:moon_manifest/l10n/app_localizations.dart';
 import 'package:moon_manifest/providers/settings_provider.dart';
 import 'package:moon_manifest/theme/app_colors.dart';
 import 'package:moon_manifest/ui/shared/moon_phase_indicator.dart';
@@ -105,9 +106,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   Widget _buildWelcomePage() {
+    final l10n = AppLocalizations.of(context)!;
     return OnboardingPage(
-      title: 'Welcome to\nMoon Manifest',
-      body: 'This app guides a manifestation practice tied to the moon.',
+      title: l10n.onboardingWelcomeTitle,
+      body: l10n.onboardingWelcomeBody,
       illustration: Icon(
         Icons.nightlight_round,
         size: 96,
@@ -117,6 +119,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   Widget _buildCyclePage() {
+    final l10n = AppLocalizations.of(context)!;
     const phases = [
       (MoonPhase.newMoon, 0.0),
       (MoonPhase.waxing, 0.5),
@@ -125,8 +128,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     ];
 
     return OnboardingPage(
-      title: 'The Cycle',
-      body: 'Each lunar month flows through four distinct phases, each with its own energy.',
+      title: l10n.onboardingCycleTitle,
+      body: l10n.onboardingCycleBody,
       illustration: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: phases.map((entry) {
@@ -159,11 +162,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   Widget _buildWhatYouDoPage() {
-    const phaseDescriptions = [
-      (MoonPhase.newMoon, 'Set intentions and plant seeds for new beginnings.'),
-      (MoonPhase.waxing, 'Take action and build momentum toward your goals.'),
-      (MoonPhase.fullMoon, 'Celebrate wins and release what no longer serves you.'),
-      (MoonPhase.waning, 'Reflect, rest, and integrate lessons learned.'),
+    final l10n = AppLocalizations.of(context)!;
+    final phaseDescriptions = [
+      (MoonPhase.newMoon, l10n.onboardingNewMoonDesc),
+      (MoonPhase.waxing, l10n.onboardingWaxingDesc),
+      (MoonPhase.fullMoon, l10n.onboardingFullMoonDesc),
+      (MoonPhase.waning, l10n.onboardingWaningDesc),
     ];
 
     return Padding(
@@ -172,7 +176,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'What You\'ll Do',
+            l10n.onboardingWhatYouDoTitle,
             style: Theme.of(context).textTheme.displayMedium,
             textAlign: TextAlign.center,
           ),
@@ -225,6 +229,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   Widget _buildPreferencesPage() {
+    final l10n = AppLocalizations.of(context)!;
     const frequencies = [3, 6, 9];
 
     return SingleChildScrollView(
@@ -235,13 +240,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         children: [
           const SizedBox(height: 48),
           Text(
-            'Your Preferences',
+            l10n.onboardingPreferencesTitle,
             style: Theme.of(context).textTheme.displayMedium,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
           Text(
-            'Customize how and when you receive guidance.',
+            l10n.onboardingPreferencesSubtitle,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: AppColors.textSecondary,
                 ),
@@ -249,14 +254,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           ),
           const SizedBox(height: 40),
           Text(
-            'Notification Frequency',
+            l10n.onboardingNotificationFrequency,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: AppColors.textPrimary,
                 ),
           ),
           const SizedBox(height: 4),
           Text(
-            'How many times per day do you want to be reminded?',
+            l10n.onboardingNotificationFrequencyHint,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: AppColors.textSecondary,
                 ),
@@ -267,7 +272,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             runSpacing: 8,
             children: frequencies.map((freq) {
               return ChoiceChip(
-                label: Text('$freq / day'),
+                label: Text(l10n.onboardingFrequencyPerDay(freq)),
                 selected: _selectedFrequency == freq,
                 onSelected: (_) => setState(() => _selectedFrequency = freq),
                 selectedColor: AppColors.mutedGold,
@@ -290,14 +295,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           ),
           const SizedBox(height: 36),
           Text(
-            'Wake Window',
+            l10n.onboardingWakeWindow,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: AppColors.textPrimary,
                 ),
           ),
           const SizedBox(height: 4),
           Text(
-            'No notifications outside these hours.',
+            l10n.onboardingWakeWindowHint,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: AppColors.textSecondary,
                 ),
@@ -307,7 +312,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             children: [
               Expanded(
                 child: _TimePickerTile(
-                  label: 'Wake Up',
+                  label: l10n.onboardingWakeUp,
                   time: _wakeStart,
                   onTap: () => _pickTime(isStart: true),
                 ),
@@ -315,7 +320,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: _TimePickerTile(
-                  label: 'Wind Down',
+                  label: l10n.onboardingWindDown,
                   time: _wakeEnd,
                   onTap: () => _pickTime(isStart: false),
                 ),
@@ -330,6 +335,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isLastPage = _currentPage == _totalPages - 1;
 
     return Scaffold(
@@ -368,7 +374,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         ),
                       ),
                       child: Text(
-                        isLastPage ? 'Begin' : 'Continue',
+                        isLastPage ? l10n.onboardingButtonBegin : l10n.onboardingButtonContinue,
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,

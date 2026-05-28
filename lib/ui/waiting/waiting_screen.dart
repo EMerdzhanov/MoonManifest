@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:moon_manifest/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:moon_manifest/providers/cycle_provider.dart';
@@ -66,6 +67,7 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final lunarAsync = ref.watch(lunarStateProvider);
     final scratchpadAsync = ref.watch(scratchpadProvider);
 
@@ -97,7 +99,7 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
         ),
         error: (err, _) => Center(
           child: Text(
-            'Something went wrong.',
+            l10n.commonSomethingWentWrong,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
@@ -136,7 +138,7 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
                       const Icon(Icons.schedule, color: AppColors.mutedGold, size: 16),
                       const SizedBox(width: 8),
                       Text(
-                        'The manifestation window is not yet open',
+                        l10n.waitingWindowNotOpen,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: AppColors.mutedGold,
                               fontWeight: FontWeight.w600,
@@ -147,7 +149,7 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  'Your first cycle begins at the new moon on $formattedDate.',
+                  l10n.waitingFirstCycle(formattedDate),
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.displaySmall?.copyWith(
                         color: AppColors.textPrimary,
@@ -176,7 +178,7 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
                             ),
                       ),
                       Text(
-                        daysUntil == 1 ? 'day away' : 'days away',
+                        l10n.waitingDaysAway(daysUntil),
                         style:
                             Theme.of(context).textTheme.bodyMedium?.copyWith(
                                   color: AppColors.textSecondary,
@@ -192,7 +194,7 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Prepare while you wait',
+                    l10n.waitingPrepareTitle,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                           color: AppColors.mutedGold,
                         ),
@@ -202,8 +204,8 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
 
                 _PrepCard(
                   icon: Icons.menu_book_outlined,
-                  title: 'Learn how to manifest',
-                  subtitle: 'The 4 rules that make this practice work',
+                  title: l10n.waitingLearnManifest,
+                  subtitle: l10n.waitingLearnManifestSubtitle,
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(builder: (_) => const ManifestationGuideScreen()),
                   ),
@@ -211,8 +213,8 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
                 const SizedBox(height: 10),
                 _PrepCard(
                   icon: Icons.dark_mode_outlined,
-                  title: 'Understand the lunar cycle',
-                  subtitle: 'See where you are and what each phase means',
+                  title: l10n.waitingUnderstandCycle,
+                  subtitle: l10n.waitingUnderstandCycleSubtitle,
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(builder: (_) => const LunarCycleScreen()),
                   ),
@@ -222,7 +224,7 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Draft your intentions',
+                    l10n.waitingDraftIntentionsTitle,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -232,7 +234,7 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Use this space to reflect and prepare. What do you wish to call in?',
+                    l10n.waitingDraftIntentionsBody,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
@@ -248,7 +250,7 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
                             controller: _controllers[index],
                             onChanged: (_) => _saveDrafts(),
                             decoration: InputDecoration(
-                              hintText: 'Intention ${index + 1}\u2026',
+                              hintText: l10n.waitingIntentionHint(index + 1),
                               filled: true,
                               fillColor: AppColors.cardDark,
                               border: OutlineInputBorder(
@@ -286,7 +288,7 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
                     onPressed: _addIntention,
                     icon: const Icon(Icons.add, color: AppColors.mutedGold, size: 18),
                     label: Text(
-                      'Add intention',
+                      l10n.waitingAddIntention,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: AppColors.mutedGold,
                           ),
@@ -296,7 +298,7 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
                 if (_controllers.length == _maxIntentions) ...[
                   const SizedBox(height: 4),
                   Text(
-                    'Seven intentions is a meaningful number. Take care to choose what matters most.',
+                    l10n.waitingMaxIntentionsMessage,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: AppColors.mutedGold,
@@ -314,7 +316,7 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
                           size: 12, color: AppColors.mutedGold.withValues(alpha: 0.7)),
                       const SizedBox(width: 4),
                       Text(
-                        'Draft saved',
+                        l10n.waitingDraftSaved,
                         style: TextStyle(
                           color: AppColors.mutedGold.withValues(alpha: 0.7),
                           fontSize: 11,
