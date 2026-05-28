@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:moon_manifest/core/moon/moon_phase.dart';
 import 'package:moon_manifest/core/notifications/notification_service.dart';
+import 'package:moon_manifest/l10n/app_localizations.dart';
 import 'package:moon_manifest/providers/lunar_state_provider.dart';
 import 'package:moon_manifest/theme/app_colors.dart';
 import 'package:moon_manifest/ui/shared/moon_phase_indicator.dart';
@@ -22,6 +23,7 @@ class _ManifestationPhilosophyScreenState
   bool _reminderSet = false;
 
   Future<void> _scheduleReminder(DateTime nextNewMoon) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       final scheduledDate = tz.TZDateTime.from(nextNewMoon, tz.local)
           .subtract(const Duration(hours: 1));
@@ -31,8 +33,8 @@ class _ManifestationPhilosophyScreenState
 
       await NotificationService.plugin.zonedSchedule(
         3000,
-        'The manifestation window is open.',
-        'Set your intentions now.',
+        l10n.philosophyNotificationTitle,
+        l10n.philosophyNotificationBody,
         scheduledDate,
         const NotificationDetails(
           android: AndroidNotificationDetails(
@@ -53,7 +55,7 @@ class _ManifestationPhilosophyScreenState
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not schedule reminder')),
+          SnackBar(content: Text(l10n.philosophyCouldNotSchedule)),
         );
       }
     }
@@ -61,6 +63,7 @@ class _ManifestationPhilosophyScreenState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final lunarAsync = ref.watch(lunarStateProvider);
 
     return Scaffold(
@@ -96,10 +99,10 @@ class _ManifestationPhilosophyScreenState
                 children: [
                   const SizedBox(height: 8),
 
-                  // ── WHY THE WINDOW IS CLOSED ──
+                  // -- WHY THE WINDOW IS CLOSED --
                   Center(
                     child: Text(
-                      'Why Is the Window\nClosed Right Now?',
+                      l10n.philosophyTitle,
                       style: Theme.of(context).textTheme.displayLarge?.copyWith(
                             color: AppColors.textPrimary,
                             height: 1.3,
@@ -110,26 +113,11 @@ class _ManifestationPhilosophyScreenState
 
                   const SizedBox(height: 24),
 
-                  _body(context,
-                      'Manifestation doesn\'t work on your schedule — it works on the moon\'s. '
-                      'The lunar cycle has specific windows where setting intentions is powerful, '
-                      'and periods where the most powerful thing you can do is nothing.'),
-
+                  _body(context, l10n.philosophyBody1),
                   const SizedBox(height: 16),
-
-                  _body(context,
-                      'Right now, the moon is waning — shrinking toward darkness. '
-                      'This is the release phase. Your intentions from this cycle have been planted, '
-                      'tended, and offered in gratitude. Now they need space to take root. '
-                      'Pushing harder during this phase doesn\'t help. It interferes.'),
-
+                  _body(context, l10n.philosophyBody2),
                   const SizedBox(height: 16),
-
-                  _body(context,
-                      'When the new moon arrives, the window opens again. '
-                      'That\'s when you set fresh intentions and begin a new cycle. '
-                      'The wait isn\'t wasted time — it\'s part of the practice. '
-                      'The discipline of release is what separates manifestation from wishing.'),
+                  _body(context, l10n.philosophyBody3),
 
                   const SizedBox(height: 28),
 
@@ -161,7 +149,7 @@ class _ManifestationPhilosophyScreenState
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'days until the window opens',
+                            l10n.philosophyDaysUntilOpen,
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium
@@ -197,7 +185,7 @@ class _ManifestationPhilosophyScreenState
                                             size: 18, color: AppColors.mutedGold),
                                         const SizedBox(width: 8),
                                         Text(
-                                          'Reminder set for $dateStr',
+                                          l10n.philosophyReminderSetFor(dateStr),
                                           style: TextStyle(
                                             color: AppColors.mutedGold,
                                             fontSize: 14,
@@ -214,7 +202,7 @@ class _ManifestationPhilosophyScreenState
                                         Icons.notifications_active_outlined,
                                         size: 18),
                                     label:
-                                        const Text('Remind me when it opens'),
+                                        Text(l10n.philosophyRemindMe),
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: AppColors.mutedGold,
                                       foregroundColor: AppColors.deepIndigo,
@@ -234,7 +222,7 @@ class _ManifestationPhilosophyScreenState
 
                   const SizedBox(height: 48),
 
-                  // ── Divider ──
+                  // -- Divider --
                   Center(
                     child: Container(
                       width: 40,
@@ -245,9 +233,7 @@ class _ManifestationPhilosophyScreenState
 
                   const SizedBox(height: 48),
 
-                  // ── THE HOOK ──
-
-                  // Moon
+                  // -- THE HOOK --
                   Center(
                     child: MoonPhaseIndicator(
                       illumination: state.illumination,
@@ -260,7 +246,7 @@ class _ManifestationPhilosophyScreenState
 
                   Center(
                     child: Text(
-                      'What They Know\nThat You Don\'t',
+                      l10n.philosophyHookTitle,
                       style:
                           Theme.of(context).textTheme.displayLarge?.copyWith(
                                 color: AppColors.textPrimary,
@@ -272,106 +258,56 @@ class _ManifestationPhilosophyScreenState
 
                   const SizedBox(height: 40),
 
-                  _body(context,
-                      'The most successful people on earth don\'t just set goals. '
-                      'They work with timing. They understand something most people '
-                      'never will: that the universe has a rhythm, and those who '
-                      'align with it don\'t chase results — results chase them.'),
-
+                  _body(context, l10n.philosophyHookBody1),
                   const SizedBox(height: 20),
-
-                  _body(context,
-                      'This is not a secret. It is ancient knowledge — practiced for '
-                      'thousands of years by those who shaped empires, built dynasties, '
-                      'and quietly moved the world. The moon was their clock. '
-                      '"I AM" was their language. And commitment was their price.'),
-
+                  _body(context, l10n.philosophyHookBody2),
                   const SizedBox(height: 20),
-
-                  _body(context,
-                      'Here is what they understood: manifestation is simple. '
-                      'Not easy — simple. You declare what you are becoming. '
-                      'You repeat it until your mind believes it. '
-                      'You give thanks before you see proof. '
-                      'And then you let go. Completely.'),
-
+                  _body(context, l10n.philosophyHookBody3),
                   const SizedBox(height: 20),
-
-                  _body(context,
-                      'Most people fail because they won\'t commit to the process. '
-                      'They want the result without the discipline. They manifest '
-                      'for a day, check for signs, and quit when nothing happens by Tuesday. '
-                      'That is not manifestation. That is wishing.'),
+                  _body(context, l10n.philosophyHookBody4),
 
                   const SizedBox(height: 40),
 
-                  // ── THE MOON ──
-                  _heading(context, 'The Moon Is the Missing Piece'),
-
+                  // -- THE MOON --
+                  _heading(context, l10n.philosophyMoonHeading),
                   const SizedBox(height: 16),
-
-                  _body(context,
-                      'You\'ve probably tried affirmations before. You\'ve probably said '
-                      '"I am abundant" in the mirror and felt nothing change. '
-                      'That\'s because you were speaking into dead air — no timing, '
-                      'no structure, no cosmic alignment behind your words.'),
-
+                  _body(context, l10n.philosophyMoonBody1),
                   const SizedBox(height: 20),
-
-                  _body(context,
-                      'The moon changes everything. It gives your practice a cycle — '
-                      'a beginning, a middle, a peak, and a release. When you set '
-                      'intentions at the new moon, you\'re not just writing wishes. '
-                      'You\'re planting seeds in the only soil that has been moving '
-                      'oceans since before humans existed.'),
-
+                  _body(context, l10n.philosophyMoonBody2),
                   const SizedBox(height: 20),
-
-                  _body(context,
-                      'The waning moon is not a pause. It is the most demanding phase of all. '
-                      'Anyone can ask. Anyone can repeat. But to release — to truly let go '
-                      'and trust that what you planted is growing in darkness — '
-                      'that requires the discipline this practice was built on.'),
+                  _body(context, l10n.philosophyMoonBody3),
 
                   const SizedBox(height: 40),
 
-                  // ── THE FOUR PHASES ──
-                  _heading(context, 'The Four Sacred Phases'),
-
+                  // -- THE FOUR PHASES --
+                  _heading(context, l10n.philosophyFourPhasesHeading),
                   const SizedBox(height: 16),
 
                   _phaseDescription(context, MoonPhase.newMoon, 0.0,
-                      'The Planting',
-                      'In darkness, you name what you need — not what you want, '
-                      'but what your soul requires. The new moon holds space for raw truth.'),
+                      l10n.philosophyPhasePlanting,
+                      l10n.philosophyPhasePlantingDesc),
                   const SizedBox(height: 20),
 
                   _phaseDescription(context, MoonPhase.waxing, 0.5,
-                      'The Tending',
-                      'As light returns, you repeat your intentions daily. '
-                      'Not as hope, but as certainty. You are not asking — you are remembering '
-                      'what is already on its way.'),
+                      l10n.philosophyPhaseTending,
+                      l10n.philosophyPhaseTendingDesc),
                   const SizedBox(height: 20),
 
                   _phaseDescription(context, MoonPhase.fullMoon, 1.0,
-                      'The Gratitude',
-                      'At full illumination, you give thanks as though you already hold '
-                      'what you asked for. This is not pretending. This is the act '
-                      'that collapses the distance between where you are and where you are going.'),
+                      l10n.philosophyPhaseGratitude,
+                      l10n.philosophyPhaseGratitudeDesc),
                   const SizedBox(height: 20),
 
                   _phaseDescription(context, MoonPhase.waning, 0.5,
-                      'The Release',
-                      'And then — silence. You let go. You stop pushing, stop checking, '
-                      'stop asking. The waning moon teaches the hardest lesson: '
-                      'that your work is done, and now it belongs to something larger than you.'),
+                      l10n.philosophyPhaseRelease,
+                      l10n.philosophyPhaseReleaseDesc),
 
                   const SizedBox(height: 40),
 
-                  // ── CLOSING ──
+                  // -- CLOSING --
                   Center(
                     child: Text(
-                      'When the moon returns to darkness,\nyou begin.',
+                      l10n.philosophyClosing,
                       textAlign: TextAlign.center,
                       style:
                           Theme.of(context).textTheme.headlineMedium?.copyWith(

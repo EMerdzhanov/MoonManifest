@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:moon_manifest/core/moon/moon_phase.dart';
+import 'package:moon_manifest/l10n/app_localizations.dart';
 import 'package:moon_manifest/providers/lunar_state_provider.dart';
 import 'package:moon_manifest/theme/app_colors.dart';
 import 'package:moon_manifest/ui/shared/cycle_timeline.dart';
@@ -279,7 +280,7 @@ class _CycleProgressBarState extends ConsumerState<CycleProgressBar>
             ),
             const SizedBox(height: 20),
             Text(
-              'This Cycle',
+              AppLocalizations.of(ctx)!.cycleThisCycle,
               style: Theme.of(ctx).textTheme.displaySmall?.copyWith(
                     color: AppColors.mutedGold,
                   ),
@@ -297,7 +298,7 @@ class _CycleProgressBarState extends ConsumerState<CycleProgressBar>
                   );
                 },
                 child: Text(
-                  'See full cycle details',
+                  AppLocalizations.of(context)!.cycleSeeFullDetails,
                   style: TextStyle(
                     color: AppColors.mutedGold.withValues(alpha: 0.7),
                     fontSize: 12,

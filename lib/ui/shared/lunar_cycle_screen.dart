@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:moon_manifest/core/moon/moon_phase.dart';
+import 'package:moon_manifest/l10n/app_localizations.dart';
 import 'package:moon_manifest/providers/lunar_state_provider.dart';
 import 'package:moon_manifest/ui/shared/cycle_timeline.dart';
 import 'package:moon_manifest/theme/app_colors.dart';
@@ -40,7 +41,20 @@ class _LunarCycleScreenState extends ConsumerState<LunarCycleScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final lunarAsync = ref.watch(lunarStateProvider);
+
+    // Build localized phase labels for the diagram painter
+    final diagramLabels = [
+      l10n.cycleDiagramNewMoon,
+      l10n.cycleDiagramWaxingCrescent,
+      l10n.cycleDiagramFirstQuarter,
+      l10n.cycleDiagramWaxingGibbous,
+      l10n.cycleDiagramFullMoon,
+      l10n.cycleDiagramWaningGibbous,
+      l10n.cycleDiagramLastQuarter,
+      l10n.cycleDiagramWaningCrescent,
+    ];
 
     return Scaffold(
       backgroundColor: AppColors.deepIndigo,
@@ -49,7 +63,7 @@ class _LunarCycleScreenState extends ConsumerState<LunarCycleScreen>
         elevation: 0,
         leading: const BackButton(color: AppColors.textSecondary),
         title: Text(
-          'The Lunar Cycle',
+          l10n.lunarCycleTitle,
           style: Theme.of(context).textTheme.displaySmall,
         ),
       ),
@@ -83,6 +97,9 @@ class _LunarCycleScreenState extends ConsumerState<LunarCycleScreen>
                           currentPhase: state.phase,
                           illumination: state.illumination,
                           pulseValue: _pulseAnimation.value,
+                          labels: diagramLabels,
+                          manifestLabel: l10n.cycleDiagramManifest,
+                          releaseLabel: l10n.cycleDiagramRelease,
                         ),
                         child: const SizedBox.expand(),
                       ),
@@ -120,7 +137,7 @@ class _LunarCycleScreenState extends ConsumerState<LunarCycleScreen>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'You are here: ${state.phase.displayName}',
+                                l10n.lunarYouAreHere(state.phase.displayName),
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyLarge
@@ -131,7 +148,7 @@ class _LunarCycleScreenState extends ConsumerState<LunarCycleScreen>
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                'Day ${state.dayInPhase + 1} of ${state.totalDaysInPhase}',
+                                l10n.lunarDayOfTotal(state.dayInPhase + 1, state.totalDaysInPhase),
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodySmall
@@ -150,46 +167,46 @@ class _LunarCycleScreenState extends ConsumerState<LunarCycleScreen>
                   _PhaseRow(
                     phase: MoonPhase.newMoon,
                     illumination: 0.0,
-                    title: 'New Moon — Plant',
-                    description:
-                        'Set your intentions. Name what you truly need. This is where the cycle begins.',
-                    duration: '~1 day',
-                    status: 'Intentions open',
+                    title: l10n.lunarNewMoonPlant,
+                    description: l10n.lunarNewMoonPlantDesc,
+                    duration: l10n.lunarNewMoonDuration,
+                    status: l10n.lunarNewMoonStatus,
                     isActive: true,
                     isCurrent: state.phase == MoonPhase.newMoon,
+                    nowLabel: l10n.lunarNow,
                   ),
                   _PhaseRow(
                     phase: MoonPhase.waxing,
                     illumination: 0.5,
-                    title: 'Waxing — Tend',
-                    description:
-                        'Repeat your intentions daily. Build belief through repetition. The moon grows, and so does your conviction.',
-                    duration: '~14 days',
-                    status: 'Daily reminders active',
+                    title: l10n.lunarWaxingTend,
+                    description: l10n.lunarWaxingTendDesc,
+                    duration: l10n.lunarWaxingDuration,
+                    status: l10n.lunarWaxingStatus,
                     isActive: true,
                     isCurrent: state.phase == MoonPhase.waxing,
+                    nowLabel: l10n.lunarNow,
                   ),
                   _PhaseRow(
                     phase: MoonPhase.fullMoon,
                     illumination: 1.0,
-                    title: 'Full Moon — Give Thanks',
-                    description:
-                        'Express gratitude as if you already have what you asked for. This is the peak — the moment of receiving.',
-                    duration: '~1 day',
-                    status: 'Gratitude ceremony',
+                    title: l10n.lunarFullMoonGiveThanks,
+                    description: l10n.lunarFullMoonGiveThanksDesc,
+                    duration: l10n.lunarFullMoonDuration,
+                    status: l10n.lunarFullMoonStatus,
                     isActive: true,
                     isCurrent: state.phase == MoonPhase.fullMoon,
+                    nowLabel: l10n.lunarNow,
                   ),
                   _PhaseRow(
                     phase: MoonPhase.waning,
                     illumination: 0.5,
-                    title: 'Waning — Release',
-                    description:
-                        'Let go completely. Stop pushing, stop checking. Trust that what you planted is growing in the dark.',
-                    duration: '~14 days',
-                    status: 'Window closed — silence',
+                    title: l10n.lunarWaningRelease,
+                    description: l10n.lunarWaningReleaseDesc,
+                    duration: l10n.lunarWaningDuration,
+                    status: l10n.lunarWaningStatus,
                     isActive: false,
                     isCurrent: state.phase == MoonPhase.waning,
+                    nowLabel: l10n.lunarNow,
                   ),
 
                   const SizedBox(height: 24),
@@ -201,7 +218,7 @@ class _LunarCycleScreenState extends ConsumerState<LunarCycleScreen>
                       _legendDot(const Color(0xFF4A9E6B)),
                       const SizedBox(width: 6),
                       Text(
-                        'Manifest',
+                        l10n.lunarLegendManifest,
                         style: Theme.of(context)
                             .textTheme
                             .bodySmall
@@ -211,7 +228,7 @@ class _LunarCycleScreenState extends ConsumerState<LunarCycleScreen>
                       _legendDot(const Color(0xFF7B8CBA)),
                       const SizedBox(width: 6),
                       Text(
-                        'Release',
+                        l10n.lunarLegendRelease,
                         style: Theme.of(context)
                             .textTheme
                             .bodySmall
@@ -222,9 +239,9 @@ class _LunarCycleScreenState extends ConsumerState<LunarCycleScreen>
 
                   const SizedBox(height: 40),
 
-                  // ── THIS CYCLE TIMELINE ──
+                  // -- THIS CYCLE TIMELINE --
                   Text(
-                    'This Cycle',
+                    l10n.lunarThisCycle,
                     style: Theme.of(context).textTheme.displaySmall?.copyWith(
                           color: AppColors.mutedGold,
                         ),
@@ -268,6 +285,7 @@ class _PhaseRow extends StatelessWidget {
   final String status;
   final bool isActive;
   final bool isCurrent;
+  final String nowLabel;
 
   const _PhaseRow({
     required this.phase,
@@ -278,6 +296,7 @@ class _PhaseRow extends StatelessWidget {
     required this.status,
     required this.isActive,
     required this.isCurrent,
+    required this.nowLabel,
   });
 
   @override
@@ -348,7 +367,7 @@ class _PhaseRow extends StatelessWidget {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
-                          'NOW',
+                          nowLabel,
                           style: TextStyle(
                             color: isActive
                                 ? AppColors.mutedGold
@@ -409,28 +428,33 @@ class _PhaseRow extends StatelessWidget {
   }
 }
 
-/// Vertical timeline showing this cycle's real dates and phases.
 /// Custom painter for the circular moon phase diagram.
 class _CycleDiagramPainter extends CustomPainter {
   final MoonPhase currentPhase;
   final double illumination;
-  final double pulseValue; // 0.0 to 1.0, drives the glow animation
+  final double pulseValue;
+  final List<String> labels;
+  final String manifestLabel;
+  final String releaseLabel;
 
   _CycleDiagramPainter({
     required this.currentPhase,
     required this.illumination,
     required this.pulseValue,
+    required this.labels,
+    required this.manifestLabel,
+    required this.releaseLabel,
   });
 
   static const _phases = [
-    (MoonPhase.newMoon, 0.0, 'New Moon'),
-    (MoonPhase.waxing, 0.25, 'Waxing\nCrescent'),
-    (MoonPhase.waxing, 0.5, 'First\nQuarter'),
-    (MoonPhase.waxing, 0.75, 'Waxing\nGibbous'),
-    (MoonPhase.fullMoon, 1.0, 'Full Moon'),
-    (MoonPhase.waning, 0.75, 'Waning\nGibbous'),
-    (MoonPhase.waning, 0.5, 'Last\nQuarter'),
-    (MoonPhase.waning, 0.25, 'Waning\nCrescent'),
+    (MoonPhase.newMoon, 0.0),
+    (MoonPhase.waxing, 0.25),
+    (MoonPhase.waxing, 0.5),
+    (MoonPhase.waxing, 0.75),
+    (MoonPhase.fullMoon, 1.0),
+    (MoonPhase.waning, 0.75),
+    (MoonPhase.waning, 0.5),
+    (MoonPhase.waning, 0.25),
   ];
 
   @override
@@ -439,14 +463,10 @@ class _CycleDiagramPainter extends CustomPainter {
     final orbitRadius = math.min(size.width, size.height) / 2 - 65;
     const moonRadius = 20.0;
 
-    // Draw inner orbit as two colored arcs:
-    // Green (manifest) = New Moon → Full Moon (right/clockwise, top to bottom)
-    // Amber (release) = Full Moon → New Moon (left/clockwise, bottom to top)
     final innerRadius = orbitRadius - moonRadius - 24;
-    const manifestColor = Color(0xFF4A9E6B); // soft green
-    const releaseColor = Color(0xFF7B8CBA);  // soft blue
+    const manifestColor = Color(0xFF4A9E6B);
+    const releaseColor = Color(0xFF7B8CBA);
 
-    // Manifest arc: from top (-π/2), sweep π clockwise to bottom
     final manifestPaint = Paint()
       ..color = manifestColor
       ..style = PaintingStyle.stroke
@@ -454,13 +474,12 @@ class _CycleDiagramPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: innerRadius),
-      -math.pi / 2, // start at top
-      math.pi,      // sweep clockwise to bottom
+      -math.pi / 2,
+      math.pi,
       false,
       manifestPaint,
     );
 
-    // Release arc: from bottom (π/2), sweep π clockwise to top
     final releasePaint = Paint()
       ..color = releaseColor
       ..style = PaintingStyle.stroke
@@ -468,13 +487,12 @@ class _CycleDiagramPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: innerRadius),
-      math.pi / 2, // start at bottom
-      math.pi,     // sweep clockwise to top
+      math.pi / 2,
+      math.pi,
       false,
       releasePaint,
     );
 
-    // Curved text: draw each character along the inside of the arc
     void drawCurvedText(String text, double startAngle, double sweepAngle,
         double textRadius, Color color) {
       final chars = text.split('');
@@ -500,28 +518,21 @@ class _CycleDiagramPainter extends CustomPainter {
 
         canvas.save();
         canvas.translate(cx, cy);
-        // Rotate character to follow the arc tangent + face inward
         canvas.rotate(charAngle + math.pi / 2);
         tp.paint(canvas, Offset(-tp.width / 2, -tp.height / 2));
         canvas.restore();
       }
     }
 
-    // "MANIFEST" on the inside of the right (green) arc
-    // Right arc goes from -π/2 (top) to π/2 (bottom)
     drawCurvedText(
-        'MANIFEST', -math.pi / 2, math.pi, innerRadius - 16, manifestColor);
-
-    // "RELEASE" on the inside of the left (blue) arc
-    // Left arc goes from π/2 (bottom) to 3π/2 (top)
+        manifestLabel, -math.pi / 2, math.pi, innerRadius - 16, manifestColor);
     drawCurvedText(
-        'RELEASE', math.pi / 2, math.pi, innerRadius - 16, releaseColor);
+        releaseLabel, math.pi / 2, math.pi, innerRadius - 16, releaseColor);
 
-    // Directional arrows — larger and more visible
     void drawArrow(double angle, Color color) {
       final ax = center.dx + innerRadius * math.cos(angle);
       final ay = center.dy + innerRadius * math.sin(angle);
-      final tangentAngle = angle + math.pi / 2; // clockwise tangent
+      final tangentAngle = angle + math.pi / 2;
       const arrowLen = 10.0;
       const arrowWidth = 6.0;
 
@@ -542,17 +553,14 @@ class _CycleDiagramPainter extends CustomPainter {
       );
     }
 
-    // Green arrows on right arc (manifest)
-    drawArrow(-math.pi / 4, manifestColor);  // top-right
-    drawArrow(math.pi / 4, manifestColor);   // bottom-right
-    // Blue arrows on left arc (release)
-    drawArrow(3 * math.pi / 4, releaseColor);  // bottom-left
-    drawArrow(5 * math.pi / 4, releaseColor);  // top-left
+    drawArrow(-math.pi / 4, manifestColor);
+    drawArrow(math.pi / 4, manifestColor);
+    drawArrow(3 * math.pi / 4, releaseColor);
+    drawArrow(5 * math.pi / 4, releaseColor);
 
-    // Draw each moon phase around the circle
     for (var i = 0; i < _phases.length; i++) {
-      final (phase, illum, label) = _phases[i];
-      // Start from top (new moon), go clockwise
+      final (phase, illum) = _phases[i];
+      final label = labels[i];
       final angle = (i / _phases.length) * 2 * math.pi - math.pi / 2;
       final x = center.dx + orbitRadius * math.cos(angle);
       final y = center.dy + orbitRadius * math.sin(angle);
@@ -562,9 +570,7 @@ class _CycleDiagramPainter extends CustomPainter {
       final isWaxing =
           phase == MoonPhase.waxing || phase == MoonPhase.newMoon;
 
-      // Draw pulsing glow for current phase
       if (isCurrent) {
-        // Outer glow — pulses in size and opacity
         final glowSize = moonRadius + 10 + (pulseValue * 6);
         final glowAlpha = 0.1 + (pulseValue * 0.12);
         final glowPaint = Paint()
@@ -572,7 +578,6 @@ class _CycleDiagramPainter extends CustomPainter {
           ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 16);
         canvas.drawCircle(moonCenter, glowSize, glowPaint);
 
-        // Ring — pulses in opacity and slightly in size
         final ringSize = moonRadius + 5 + (pulseValue * 2);
         final ringAlpha = 0.35 + (pulseValue * 0.3);
         final ringPaint = Paint()
@@ -582,10 +587,8 @@ class _CycleDiagramPainter extends CustomPainter {
         canvas.drawCircle(moonCenter, ringSize, ringPaint);
       }
 
-      // Draw moon
       _drawMoon(canvas, moonCenter, moonRadius, illum, isWaxing);
 
-      // Draw label — positioned well outside the moon
       final textPainter = TextPainter(
         text: TextSpan(
           text: label,
@@ -603,18 +606,15 @@ class _CycleDiagramPainter extends CustomPainter {
       );
       textPainter.layout(maxWidth: 80);
 
-      // Position labels to the side for left/right, radially outward for others.
       double offsetX;
       double offsetY;
 
       if (i == 2) {
-        // First Quarter (right) — label just right of moon
         final moonX = center.dx + orbitRadius * math.cos(angle);
         final moonY = center.dy + orbitRadius * math.sin(angle);
         offsetX = moonX + moonRadius + 14;
         offsetY = moonY - textPainter.height / 2;
       } else if (i == 6) {
-        // Last Quarter (left) — label just left of moon
         final moonX = center.dx + orbitRadius * math.cos(angle);
         final moonY = center.dy + orbitRadius * math.sin(angle);
         offsetX = moonX - moonRadius - textPainter.width - 14;
@@ -636,7 +636,6 @@ class _CycleDiagramPainter extends CustomPainter {
       case MoonPhase.newMoon:
         return index == 0;
       case MoonPhase.waxing:
-        // Approximate position based on illumination
         if (illumination < 0.4) return index == 1;
         if (illumination < 0.6) return index == 2;
         return index == 3;
@@ -651,12 +650,9 @@ class _CycleDiagramPainter extends CustomPainter {
 
   void _drawMoon(Canvas canvas, Offset center, double radius,
       double illumination, bool isWaxing) {
-    // Visible dark side — a blue-grey that's lighter than the background
-    // so the full disc is always visible (like the reference image)
     const darkSideColor = Color(0xFF252D45);
     canvas.drawCircle(center, radius, Paint()..color = darkSideColor);
 
-    // Subtle edge outline for definition
     canvas.drawCircle(
       center,
       radius,
@@ -675,72 +671,50 @@ class _CycleDiagramPainter extends CustomPainter {
       return;
     }
 
-    // The terminator is an ellipse whose x-radius shrinks as illumination
-    // moves away from 0.5 (half moon). At 0.5, it's a straight line (x=0).
-    // At 0.25 (crescent), it curves into the lit side creating a thin sliver.
-    // At 0.75 (gibbous), it curves into the dark side.
     final terminatorXRadius = radius * (2 * illumination - 1).abs();
     final isGibbous = illumination > 0.5;
 
     final path = Path();
 
-    // For waxing: lit side is on the RIGHT
-    // For waning: lit side is on the LEFT
-    //
-    // Strategy: trace the outer circle arc on the lit side (top to bottom),
-    // then trace back along the terminator ellipse (bottom to top).
-    // This creates a single closed path = the lit crescent/gibbous shape.
-
     if (isWaxing) {
-      // Outer arc: right half of circle, from top to bottom (clockwise)
       path.addArc(
         Rect.fromCircle(center: center, radius: radius),
-        -math.pi / 2, // start at top
-        math.pi, // sweep to bottom (right side)
+        -math.pi / 2,
+        math.pi,
       );
-      // Terminator arc: back from bottom to top
       if (isGibbous) {
-        // Gibbous: terminator curves LEFT (into dark side)
-        // Arc from bottom to top along LEFT side of ellipse
         path.arcTo(
           Rect.fromCenter(center: center, width: terminatorXRadius * 2, height: radius * 2),
-          math.pi / 2, // start at bottom
-          math.pi, // sweep back to top (left side of ellipse)
+          math.pi / 2,
+          math.pi,
           false,
         );
       } else {
-        // Crescent: terminator curves RIGHT (into lit side, narrowing it)
-        // Arc from bottom to top along RIGHT side of ellipse
         path.arcTo(
           Rect.fromCenter(center: center, width: terminatorXRadius * 2, height: radius * 2),
-          math.pi / 2, // start at bottom
-          -math.pi, // sweep back to top (right side of ellipse = negative sweep)
+          math.pi / 2,
+          -math.pi,
           false,
         );
       }
     } else {
-      // Waning: lit side is on the LEFT
-      // Outer arc: left half of circle, from top to bottom (counter-clockwise)
       path.addArc(
         Rect.fromCircle(center: center, radius: radius),
-        -math.pi / 2, // start at top
-        -math.pi, // sweep to bottom (left side)
+        -math.pi / 2,
+        -math.pi,
       );
-      // Terminator arc: back from bottom to top
       if (isGibbous) {
-        // Gibbous: terminator curves RIGHT (into dark side)
         path.arcTo(
           Rect.fromCenter(center: center, width: terminatorXRadius * 2, height: radius * 2),
-          math.pi / 2, // start at bottom
-          -math.pi, // sweep back to top (right side of ellipse)
+          math.pi / 2,
+          -math.pi,
           false,
         );
       } else {
-        // Crescent: terminator curves LEFT (into lit side, narrowing it)
         path.arcTo(
           Rect.fromCenter(center: center, width: terminatorXRadius * 2, height: radius * 2),
-          math.pi / 2, // start at bottom
-          math.pi, // sweep back to top (left side of ellipse)
+          math.pi / 2,
+          math.pi,
           false,
         );
       }

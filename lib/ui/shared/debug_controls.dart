@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:moon_manifest/l10n/app_localizations.dart';
 import 'package:moon_manifest/providers/lunar_state_provider.dart';
 import 'package:moon_manifest/theme/app_colors.dart';
 
@@ -24,9 +25,14 @@ class DebugControls extends ConsumerWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            override != null ? 'DEBUG: ${DateFormat('MMM d, yyyy HH:mm').format(override)}' : 'DEBUG: live',
-            style: const TextStyle(color: AppColors.error, fontSize: 10, fontWeight: FontWeight.w600),
+          Builder(
+            builder: (context) {
+              final l10n = AppLocalizations.of(context)!;
+              return Text(
+                override != null ? l10n.debugLabel(DateFormat('MMM d, yyyy HH:mm').format(override)) : l10n.debugLabel(l10n.debugLive),
+                style: const TextStyle(color: AppColors.error, fontSize: 10, fontWeight: FontWeight.w600),
+              );
+            },
           ),
           const SizedBox(width: 4),
           GestureDetector(
