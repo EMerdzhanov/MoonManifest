@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:moon_manifest/core/wisdom/daily_wisdom.dart';
+import 'package:moon_manifest/l10n/app_localizations.dart';
 import 'package:moon_manifest/providers/lunar_state_provider.dart';
 import 'package:moon_manifest/theme/app_colors.dart';
 import 'package:moon_manifest/ui/shared/calm_scaffold.dart';
@@ -14,6 +15,7 @@ class WaningScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final lunarAsync = ref.watch(lunarStateProvider);
 
     return CalmScaffold(
@@ -25,7 +27,7 @@ class WaningScreen extends ConsumerWidget {
         ),
         error: (err, _) => Center(
           child: Text(
-            'Something went wrong.',
+            l10n.commonSomethingWentWrong,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
@@ -75,7 +77,7 @@ class WaningScreen extends ConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Manifestation window closed',
+                                l10n.waningWindowClosed,
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyMedium
@@ -86,7 +88,7 @@ class WaningScreen extends ConsumerWidget {
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                'Opens again in $daysUntil days at the new moon',
+                                l10n.waningOpensAgain(daysUntil),
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodySmall
@@ -114,7 +116,7 @@ class WaningScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 48),
                 Text(
-                  'Release. Trust.',
+                  l10n.waningReleaseTrust,
                   textAlign: TextAlign.center,
                   style:
                       Theme.of(context).textTheme.displaySmall?.copyWith(
@@ -124,7 +126,7 @@ class WaningScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'The work is done.',
+                  l10n.waningWorkDone,
                   textAlign: TextAlign.center,
                   style: Theme.of(context)
                       .textTheme
@@ -136,7 +138,7 @@ class WaningScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 40),
                 Text(
-                  'Next new moon',
+                  l10n.waningNextNewMoon,
                   textAlign: TextAlign.center,
                   style:
                       Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -163,7 +165,7 @@ class WaningScreen extends ConsumerWidget {
                     ),
                   ),
                   child: Text(
-                    'Why is it quiet?',
+                    l10n.waningWhyQuiet,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color:
                               AppColors.textMuted.withValues(alpha: 0.6),

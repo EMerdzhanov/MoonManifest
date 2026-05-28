@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:moon_manifest/l10n/app_localizations.dart';
 import 'package:moon_manifest/providers/cycle_provider.dart';
 import 'package:moon_manifest/providers/lunar_state_provider.dart';
 import 'package:moon_manifest/theme/app_colors.dart';
@@ -64,6 +65,7 @@ class _WaxingScreenState extends ConsumerState<WaxingScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final lunarAsync = ref.watch(lunarStateProvider);
     final cycleAsync = ref.watch(activeCycleProvider);
 
@@ -76,7 +78,7 @@ class _WaxingScreenState extends ConsumerState<WaxingScreen>
         ),
         error: (err, _) => Center(
           child: Text(
-            'Something went wrong.',
+            l10n.commonSomethingWentWrong,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
@@ -105,7 +107,7 @@ class _WaxingScreenState extends ConsumerState<WaxingScreen>
                 ),
                 const SizedBox(height: 48),
                 Text(
-                  'Day ${lunarState.dayInPhase} of waxing.',
+                  l10n.waxingDayOfWaxing(lunarState.dayInPhase),
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.displaySmall?.copyWith(
                         color: AppColors.textPrimary,
@@ -115,8 +117,8 @@ class _WaxingScreenState extends ConsumerState<WaxingScreen>
                 const SizedBox(height: 8),
                 Text(
                   daysUntilFull == 1
-                      ? 'Full moon tomorrow.'
-                      : 'Full moon in $daysUntilFull days.',
+                      ? l10n.waxingFullMoonTomorrow
+                      : l10n.waxingFullMoonInDays(daysUntilFull),
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: AppColors.mutedGold,
@@ -152,7 +154,7 @@ class _WaxingScreenState extends ConsumerState<WaxingScreen>
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Your Intentions',
+                    l10n.waxingYourIntentions,
                     style:
                         Theme.of(context).textTheme.headlineMedium?.copyWith(
                               color: AppColors.textSecondary,
@@ -167,7 +169,7 @@ class _WaxingScreenState extends ConsumerState<WaxingScreen>
                         color: AppColors.mutedGold),
                   ),
                   error: (err, _) => Text(
-                    'Unable to load intentions.',
+                    l10n.waxingUnableToLoad,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   data: (cycle) {
@@ -180,7 +182,7 @@ class _WaxingScreenState extends ConsumerState<WaxingScreen>
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          'No intentions found for this cycle.',
+                          l10n.waxingNoIntentionsFound,
                           textAlign: TextAlign.center,
                           style: Theme.of(context)
                               .textTheme

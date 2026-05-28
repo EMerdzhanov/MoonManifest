@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:moon_manifest/core/moon/moon_phase.dart';
 import 'package:moon_manifest/data/models/cycle.dart';
+import 'package:moon_manifest/l10n/app_localizations.dart';
 import 'package:moon_manifest/providers/cycle_provider.dart';
 import 'package:moon_manifest/providers/lunar_state_provider.dart';
 import 'package:moon_manifest/theme/app_colors.dart';
@@ -113,6 +114,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final lunarAsync = ref.watch(lunarStateProvider);
     final cycleAsync = ref.watch(activeCycleProvider);
 
@@ -125,7 +127,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
         ),
         error: (err, _) => Center(
           child: Text(
-            'Something went wrong.',
+            l10n.commonSomethingWentWrong,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
@@ -142,6 +144,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
   }
 
   Widget _buildInputView(BuildContext context, dynamic lunarState) {
+    final l10n = AppLocalizations.of(context)!;
     final isGracePeriod = lunarState.isGracePeriod as bool;
     final graceDeadline = lunarState.graceDeadline as DateTime?;
 
@@ -158,7 +161,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
           ),
           const SizedBox(height: 48),
           Text(
-            'New Moon.\nSet your intentions.',
+            l10n.newMoonSetIntentions,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.displaySmall?.copyWith(
                   color: AppColors.textPrimary,
@@ -184,7 +187,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
                       color: AppColors.mutedGold, size: 16),
                   const SizedBox(width: 8),
                   Text(
-                    'Grace period ends ${DateFormat('MMM d, h:mm a').format(graceDeadline)}',
+                    l10n.newMoonGracePeriodEnds(DateFormat('MMM d, h:mm a').format(graceDeadline)),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: AppColors.mutedGold,
                         ),
@@ -201,7 +204,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
-              'Ask yourself: What do I truly need beneath my desires? Set intentions that speak to your underlying needs \u2014 growth, connection, peace, abundance.',
+              l10n.newMoonGuidancePrompt,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppColors.textSecondary,
@@ -220,7 +223,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
                 Icon(Icons.auto_awesome, size: 14, color: AppColors.mutedGold.withValues(alpha: 0.7)),
                 const SizedBox(width: 6),
                 Text(
-                  'How to write powerful intentions',
+                  l10n.newMoonHowToWrite,
                   style: TextStyle(
                     color: AppColors.mutedGold.withValues(alpha: 0.7),
                     fontSize: 12,
@@ -236,7 +239,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              'Your Intentions',
+              l10n.newMoonYourIntentions,
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     color: AppColors.textSecondary,
                   ),
@@ -258,7 +261,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
                         controller: _controllers[index],
                         onChanged: (_) => setState(() {}),
                         decoration: InputDecoration(
-                          hintText: 'Intention ${index + 1}\u2026',
+                          hintText: l10n.newMoonIntentionHint(index + 1),
                           filled: true,
                           fillColor: AppColors.cardDark,
                           border: OutlineInputBorder(
@@ -294,7 +297,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
           if (_controllers.length == _maxIntentions) ...[
             const SizedBox(height: 4),
             Text(
-              'Seven intentions is a meaningful number. Take care to choose what matters most.',
+              l10n.newMoonMaxIntentionsMessage,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: AppColors.mutedGold,
@@ -307,7 +310,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
               onPressed: _addIntention,
               icon: const Icon(Icons.add, color: AppColors.mutedGold, size: 18),
               label: Text(
-                'Add intention',
+                l10n.newMoonAddIntention,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppColors.mutedGold,
                     ),
@@ -339,9 +342,9 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
                           strokeWidth: 2,
                           color: AppColors.deepIndigo),
                     )
-                  : const Text(
-                      'Plant these intentions',
-                      style: TextStyle(
+                  : Text(
+                      l10n.newMoonPlantIntentions,
+                      style: const TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -405,6 +408,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
   }
 
   Widget _buildLockedView(BuildContext context, Cycle cycle, dynamic lunarState) {
+    final l10n = AppLocalizations.of(context)!;
     final canEdit = lunarState.phase == MoonPhase.newMoon;
 
     return SingleChildScrollView(
@@ -420,7 +424,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
           ),
           const SizedBox(height: 48),
           Text(
-            'These are your intentions for this cycle.',
+            l10n.newMoonLockedTitle,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.displaySmall?.copyWith(
                   color: AppColors.textPrimary,
@@ -430,8 +434,8 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
           const SizedBox(height: 8),
           Text(
             _isEditing
-                ? 'Edit your intentions below.'
-                : 'They have been planted. Trust the process.',
+                ? l10n.newMoonLockedSubtitleEditing
+                : l10n.newMoonLockedSubtitlePlanted,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: AppColors.textSecondary,
@@ -447,7 +451,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
                 child: TextField(
                   controller: _editControllers![index],
                   decoration: InputDecoration(
-                    hintText: 'Intention ${index + 1}...',
+                    hintText: l10n.newMoonEditIntentionHint(index + 1),
                     filled: true,
                     fillColor: AppColors.cardDark,
                     border: OutlineInputBorder(
@@ -482,7 +486,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
                       ),
                     ),
                     child: Text(
-                      'Cancel',
+                      l10n.commonCancel,
                       style: TextStyle(color: AppColors.textSecondary),
                     ),
                   ),
@@ -499,7 +503,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text('Save changes'),
+                    child: Text(l10n.newMoonSaveChanges),
                   ),
                 ),
               ],
@@ -545,7 +549,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
                 child: OutlinedButton.icon(
                   onPressed: () => _startEditing(cycle),
                   icon: const Icon(Icons.edit_outlined, size: 16),
-                  label: const Text('Edit intentions'),
+                  label: Text(l10n.newMoonEditIntentions),
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(
                         color: AppColors.mutedGold.withValues(alpha: 0.5)),
@@ -559,7 +563,7 @@ class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                'You can edit until the waxing phase begins.',
+                l10n.newMoonEditUntilWaxing,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: AppColors.textMuted,

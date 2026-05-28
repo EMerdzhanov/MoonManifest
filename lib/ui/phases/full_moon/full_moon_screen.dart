@@ -7,6 +7,7 @@ import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:moon_manifest/core/moon/moon_phase.dart';
 import 'package:moon_manifest/data/models/cycle.dart';
 import 'package:moon_manifest/data/models/lunar_state.dart';
+import 'package:moon_manifest/l10n/app_localizations.dart';
 import 'package:moon_manifest/providers/cycle_provider.dart';
 import 'package:moon_manifest/providers/lunar_state_provider.dart';
 import 'package:moon_manifest/theme/app_colors.dart';
@@ -125,6 +126,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final lunarAsync = ref.watch(lunarStateProvider);
     final activeCycleAsync = ref.watch(activeCycleProvider);
 
@@ -137,7 +139,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
         ),
         error: (err, _) => Center(
           child: Text(
-            'Something went wrong.',
+            l10n.commonSomethingWentWrong,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
@@ -148,7 +150,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
             ),
             error: (err, _) => Center(
               child: Text(
-                'Something went wrong.',
+                l10n.commonSomethingWentWrong,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
@@ -168,6 +170,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
   }
 
   Widget _buildNoIntentionsView(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -181,7 +184,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
             ),
             const SizedBox(height: 48),
             Text(
-              'No intentions were set this cycle',
+              l10n.fullMoonNoIntentionsSet,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.displaySmall?.copyWith(
                     color: AppColors.textSecondary,
@@ -195,6 +198,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
   }
 
   Widget _buildCompletedView(BuildContext context, LunarState lunarState) {
+    final l10n = AppLocalizations.of(context)!;
     final nextNewMoon = lunarState.nextNewMoon.toLocal();
     final dateStr = DateFormat('MMMM d').format(nextNewMoon);
 
@@ -210,7 +214,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
           ),
           const SizedBox(height: 48),
           Text(
-            'The work is done.',
+            l10n.fullMoonWorkDone,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.displaySmall?.copyWith(
                   color: AppColors.textPrimary,
@@ -219,7 +223,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
           ),
           const SizedBox(height: 12),
           Text(
-            'Now release.',
+            l10n.fullMoonNowRelease,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   color: AppColors.mutedGold,
@@ -228,7 +232,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
           ),
           const Spacer(flex: 4),
           Text(
-            'The waning phase begins soon.\nYour next cycle starts at the new moon on $dateStr.',
+            l10n.fullMoonWaningNext(dateStr),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: AppColors.textMuted,
@@ -247,6 +251,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
     bool isGracePeriod,
     DateTime? graceDeadline,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     final intentions = cycle.intentions;
     final safeIndex = _currentIntentionIndex.clamp(0, intentions.length - 1);
     final intention = intentions[safeIndex];
@@ -265,7 +270,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
           ),
           const SizedBox(height: 48),
           Text(
-            'Full Moon. Give thanks.',
+            l10n.fullMoonGiveThanks,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.displaySmall?.copyWith(
                   color: AppColors.textPrimary,
@@ -281,7 +286,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                'Grace period active',
+                l10n.fullMoonGracePeriodActive,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: AppColors.mutedGold,
                       letterSpacing: 0.8,
@@ -291,7 +296,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
           ],
           const SizedBox(height: 16),
           Text(
-            'Thank the universe as if you already have what you asked for',
+            l10n.fullMoonThankUniverse,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: AppColors.textSecondary,
@@ -302,7 +307,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
           // Progress indicator
           if (intentions.length > 1) ...[
             Text(
-              '${safeIndex + 1} of ${intentions.length}',
+              l10n.fullMoonProgressOf(safeIndex + 1, intentions.length),
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: AppColors.textMuted,
                     letterSpacing: 0.8,
@@ -340,7 +345,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
                   maxLines: 5,
                   minLines: 3,
                   decoration: InputDecoration(
-                    hintText: 'I am so grateful that\u2026',
+                    hintText: l10n.fullMoonGratitudeHint,
                     filled: true,
                     fillColor: AppColors.cardDark,
                     border: OutlineInputBorder(
@@ -394,7 +399,7 @@ class _FullMoonScreenState extends ConsumerState<FullMoonScreen> {
                 ),
               ),
               child: Text(
-                isLastIntention ? 'Complete ceremony' : 'Next intention',
+                isLastIntention ? l10n.fullMoonCompleteCeremony : l10n.fullMoonNextIntention,
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       color: AppColors.deepIndigo,
                       letterSpacing: 0.8,
