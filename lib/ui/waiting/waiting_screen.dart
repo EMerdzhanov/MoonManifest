@@ -18,13 +18,50 @@ class WaitingScreen extends ConsumerStatefulWidget {
 }
 
 class _WaitingScreenState extends ConsumerState<WaitingScreen> {
-  final TextEditingController _scratchpadController = TextEditingController();
+  List<TextEditingController> _controllers = [TextEditingController()];
   bool _scratchpadLoaded = false;
+  bool _showSavedIndicator = false;
+
+  static const int _maxIntentions = 7;
 
   @override
   void dispose() {
-    _scratchpadController.dispose();
+    for (final c in _controllers) {
+      c.dispose();
+    }
     super.dispose();
+  }
+
+  void _saveDrafts() {
+    final text = _controllers
+        .map((c) => c.text.trim())
+        .where((t) => t.isNotEmpty)
+        .join('\n');
+    ref.read(scratchpadProvider.notifier).save(text);
+    setState(() => _showSavedIndicator = false);
+    Future.delayed(const Duration(seconds: 1), () {
+      if (mounted) {
+        setState(() => _showSavedIndicator = true);
+      }
+    });
+  }
+
+  void _addIntention() {
+    if (_controllers.length < _maxIntentions) {
+      setState(() {
+        _controllers.add(TextEditingController());
+      });
+    }
+  }
+
+  void _removeIntention(int index) {
+    if (_controllers.length > 1) {
+      setState(() {
+        _controllers[index].dispose();
+        _controllers.removeAt(index);
+      });
+      _saveDrafts();
+    }
   }
 
   @override
@@ -35,11 +72,17 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
     // Load scratchpad text on first build
     if (!_scratchpadLoaded) {
       scratchpadAsync.whenData((text) {
-        if (text != null && _scratchpadController.text != text) {
-          _scratchpadController.text = text;
-          _scratchpadController.selection = TextSelection.fromPosition(
-            TextPosition(offset: _scratchpadController.text.length),
-          );
+        if (text != null && text.trim().isNotEmpty) {
+          final lines = text.split('\n').where((l) => l.trim().isNotEmpty).toList();
+          if (lines.isNotEmpty) {
+            for (final c in _controllers) {
+              c.dispose();
+            }
+            _controllers = lines
+                .take(_maxIntentions)
+                .map((l) => TextEditingController(text: l.trim()))
+                .toList();
+          }
         }
         _scratchpadLoaded = true;
       });
@@ -77,6 +120,32 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
                   size: 140,
                 ),
                 const SizedBox(height: 48),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: AppColors.dimGold,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: AppColors.mutedGold.withValues(alpha: 0.4),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.schedule, color: AppColors.mutedGold, size: 16),
+                      const SizedBox(width: 8),
+                      Text(
+                        'The manifestation window is not yet open',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: AppColors.mutedGold,
+                              fontWeight: FontWeight.w600,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
                 Text(
                   'Your first cycle begins at the new moon on $formattedDate.',
                   textAlign: TextAlign.center,
@@ -168,33 +237,93 @@ class _WaitingScreenState extends ConsumerState<WaitingScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                TextField(
-                  controller: _scratchpadController,
-                  maxLines: 8,
-                  minLines: 5,
-                  decoration: InputDecoration(
-                    hintText: 'Write freely here\u2026',
-                    filled: true,
-                    fillColor: AppColors.cardDark,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
+                ...List.generate(_controllers.length, (index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _controllers[index],
+                            onChanged: (_) => _saveDrafts(),
+                            decoration: InputDecoration(
+                              hintText: 'Intention ${index + 1}\u2026',
+                              filled: true,
+                              fillColor: AppColors.cardDark,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                    color: AppColors.mutedGold, width: 1),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 14),
+                            ),
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  color: AppColors.textPrimary,
+                                ),
+                          ),
+                        ),
+                        if (_controllers.length > 1) ...[
+                          const SizedBox(width: 8),
+                          IconButton(
+                            icon: const Icon(Icons.remove_circle_outline,
+                                color: AppColors.textMuted),
+                            onPressed: () => _removeIntention(index),
+                          ),
+                        ],
+                      ],
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
-                          color: AppColors.mutedGold, width: 1),
+                  );
+                }),
+                if (_controllers.length < _maxIntentions) ...[
+                  const SizedBox(height: 4),
+                  TextButton.icon(
+                    onPressed: _addIntention,
+                    icon: const Icon(Icons.add, color: AppColors.mutedGold, size: 18),
+                    label: Text(
+                      'Add intention',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: AppColors.mutedGold,
+                          ),
                     ),
-                    contentPadding: const EdgeInsets.all(16),
                   ),
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: AppColors.textPrimary,
+                ],
+                if (_controllers.length == _maxIntentions) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    'Seven intentions is a meaningful number. Take care to choose what matters most.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppColors.mutedGold,
+                        ),
+                  ),
+                ],
+                const SizedBox(height: 8),
+                AnimatedOpacity(
+                  opacity: _showSavedIndicator ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 400),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Icon(Icons.check_circle_outline,
+                          size: 12, color: AppColors.mutedGold.withValues(alpha: 0.7)),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Draft saved',
+                        style: TextStyle(
+                          color: AppColors.mutedGold.withValues(alpha: 0.7),
+                          fontSize: 11,
+                        ),
                       ),
-                  onChanged: (text) {
-                    ref.read(scratchpadProvider.notifier).save(text);
-                  },
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 24),
               ],
             ),
           );

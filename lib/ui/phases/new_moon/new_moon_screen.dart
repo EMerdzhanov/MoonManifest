@@ -20,12 +20,37 @@ class NewMoonScreen extends ConsumerStatefulWidget {
 }
 
 class _NewMoonScreenState extends ConsumerState<NewMoonScreen> {
-  final List<TextEditingController> _controllers = [
+  List<TextEditingController> _controllers = [
     TextEditingController(),
   ];
   bool _isSubmitting = false;
 
   static const int _maxIntentions = 7;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFromScratchpad();
+  }
+
+  void _loadFromScratchpad() {
+    final scratchpad = ref.read(scratchpadProvider).valueOrNull;
+    if (scratchpad == null || scratchpad.trim().isEmpty) return;
+
+    final lines = scratchpad
+        .split('\n')
+        .map((l) => l.trim())
+        .where((l) => l.isNotEmpty)
+        .take(_maxIntentions)
+        .toList();
+
+    if (lines.isEmpty) return;
+
+    for (final c in _controllers) {
+      c.dispose();
+    }
+    _controllers = lines.map((l) => TextEditingController(text: l)).toList();
+  }
 
   @override
   void dispose() {

@@ -16,17 +16,31 @@ import 'package:moon_manifest/ui/settings/settings_screen.dart';
 import 'package:moon_manifest/ui/phases/waning/manifestation_philosophy_screen.dart';
 
 
+/// Notifier that bridges Riverpod providers to GoRouter's refreshListenable,
+/// so the router instance stays stable (preserving the Navigator stack)
+/// while still re-evaluating redirects when state changes.
+class _RouterNotifier extends ChangeNotifier {
+  _RouterNotifier(Ref ref) {
+    ref.listen(settingsProvider, (_, __) => notifyListeners());
+    ref.listen(lunarStateProvider, (_, __) => notifyListeners());
+  }
+}
+
 final routerProvider = Provider<GoRouter>((ref) {
-  final settings = ref.watch(settingsProvider);
-  final lunarState = ref.watch(lunarStateProvider);
+  final notifier = _RouterNotifier(ref);
+  ref.onDispose(() => notifier.dispose());
 
   return GoRouter(
     initialLocation: '/loading',
+    refreshListenable: notifier,
     redirect: (context, state) {
       final path = state.matchedLocation;
 
       // Don't redirect away from push-routed screens
       if (path == '/history' || path == '/settings' || path == '/philosophy') return null;
+
+      final settings = ref.read(settingsProvider);
+      final lunarState = ref.read(lunarStateProvider);
 
       // Show onboarding if not complete
       if (!settings.onboardingComplete) {
@@ -40,8 +54,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       // Determine target route based on phase
       final targetRoute = _routeForState(lunar);
 
-      // Only redirect if we're on a phase/loading route and it doesn't match
-      if (path == '/loading' || _isPhaseRoute(path)) {
+      // Redirect from loading, onboarding, or phase routes to the correct phase
+      if (path == '/loading' || path == '/onboarding' || _isPhaseRoute(path)) {
         return path == targetRoute ? null : targetRoute;
       }
 

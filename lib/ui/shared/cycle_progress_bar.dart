@@ -15,9 +15,31 @@ class CycleProgressBar extends ConsumerStatefulWidget {
   ConsumerState<CycleProgressBar> createState() => _CycleProgressBarState();
 }
 
-class _CycleProgressBarState extends ConsumerState<CycleProgressBar> {
+class _CycleProgressBarState extends ConsumerState<CycleProgressBar>
+    with SingleTickerProviderStateMixin {
   static const _manifestColor = Color(0xFF4A9E6B);
   static const _releaseColor = Color(0xFF7B8CBA);
+
+  late final AnimationController _pulseController;
+  late final Animation<double> _pulseAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2000),
+    )..repeat(reverse: true);
+    _pulseAnimation = Tween<double>(begin: 0.4, end: 1.0).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,10 +103,18 @@ class _CycleProgressBarState extends ConsumerState<CycleProgressBar> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
-              // Tappable bar
+              // Tappable bar — supports tap and swipe up
               GestureDetector(
                 onTap: () => _showTimelineSheet(context, state, engine),
-                child: Column(
+                onVerticalDragEnd: (details) {
+                  if (details.primaryVelocity != null && details.primaryVelocity! < -50) {
+                    _showTimelineSheet(context, state, engine);
+                  }
+                },
+                behavior: HitTestBehavior.opaque,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: Column(
                   children: [
                     // The bar
                     SizedBox(
@@ -181,15 +211,18 @@ class _CycleProgressBarState extends ConsumerState<CycleProgressBar> {
                               state.phase.displayName,
                               style: const TextStyle(
                                 color: AppColors.mutedGold,
-                                fontSize: 9,
+                                fontSize: 10,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
                             const SizedBox(width: 4),
-                            const Icon(
-                              Icons.keyboard_arrow_up,
-                              size: 12,
-                              color: AppColors.textMuted,
+                            FadeTransition(
+                              opacity: _pulseAnimation,
+                              child: const Icon(
+                                Icons.keyboard_arrow_up,
+                                size: 16,
+                                color: AppColors.mutedGold,
+                              ),
                             ),
                           ],
                         ),
@@ -203,6 +236,7 @@ class _CycleProgressBarState extends ConsumerState<CycleProgressBar> {
                       ],
                     ),
                   ],
+                ),
                 ),
               ),
 
