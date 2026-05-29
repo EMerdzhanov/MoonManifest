@@ -84,29 +84,63 @@ class CalmScaffold extends StatelessWidget {
   }
 }
 
-class _StarField extends StatelessWidget {
+class _StarField extends StatefulWidget {
   const _StarField();
 
   @override
+  State<_StarField> createState() => _StarFieldState();
+}
+
+class _StarFieldState extends State<_StarField> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 6),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      size: Size.infinite,
-      painter: _StarPainter(),
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) => CustomPaint(
+        size: Size.infinite,
+        painter: _StarPainter(_controller.value),
+      ),
     );
   }
 }
 
 class _StarPainter extends CustomPainter {
+  final double animationValue;
+  _StarPainter(this.animationValue);
+
   @override
   void paint(Canvas canvas, Size size) {
     final rng = math.Random(42); // fixed seed for consistent layout
-    const starCount = 60;
+    const starCount = 70;
 
     for (var i = 0; i < starCount; i++) {
       final x = rng.nextDouble() * size.width;
       final y = rng.nextDouble() * size.height;
-      final radius = 0.3 + rng.nextDouble() * 0.7; // 0.3–1.0px
-      final opacity = 0.05 + rng.nextDouble() * 0.15; // 0.05–0.20
+      final radius = 0.4 + rng.nextDouble() * 0.9; // 0.4–1.3px
+      final baseOpacity = 0.10 + rng.nextDouble() * 0.25; // 0.10–0.35
+
+      // Each star twinkles at its own phase offset
+      final twinkleSpeed = 0.5 + rng.nextDouble() * 1.5;
+      final phaseOffset = rng.nextDouble() * math.pi * 2;
+      final twinkle = math.sin(animationValue * math.pi * 2 * twinkleSpeed + phaseOffset);
+      final opacity = (baseOpacity + twinkle * 0.12).clamp(0.04, 0.45);
 
       final paint = Paint()
         ..color = Colors.white.withValues(alpha: opacity);
@@ -115,5 +149,5 @@ class _StarPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

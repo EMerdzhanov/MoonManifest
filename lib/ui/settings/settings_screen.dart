@@ -579,6 +579,10 @@ class _LanguagePicker extends ConsumerWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
+      isScrollControlled: true,
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.6,
+      ),
       builder: (ctx) {
         return SafeArea(
           child: Padding(
@@ -612,31 +616,36 @@ class _LanguagePicker extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                ..._languages.map((entry) {
-                  final (code, nativeName) = entry;
-                  final isSelected = currentLocale == code;
-                  final displayName = code == null ? l10n.settingsDeviceDefault : nativeName;
+                Flexible(
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: _languages.map((entry) {
+                      final (code, nativeName) = entry;
+                      final isSelected = currentLocale == code;
+                      final displayName = code == null ? l10n.settingsDeviceDefault : nativeName;
 
-                  return ListTile(
-                    dense: true,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-                    title: Text(
-                      displayName,
-                      style: TextStyle(
-                        color: isSelected ? AppColors.mutedGold : AppColors.textPrimary,
-                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                        fontSize: 15,
-                      ),
-                    ),
-                    trailing: isSelected
-                        ? const Icon(Icons.check, size: 18, color: AppColors.mutedGold)
-                        : null,
-                    onTap: () {
-                      ref.read(settingsProvider.notifier).setLocale(code);
-                      Navigator.of(ctx).pop();
-                    },
-                  );
-                }),
+                      return ListTile(
+                        dense: true,
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                        title: Text(
+                          displayName,
+                          style: TextStyle(
+                            color: isSelected ? AppColors.mutedGold : AppColors.textPrimary,
+                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                            fontSize: 15,
+                          ),
+                        ),
+                        trailing: isSelected
+                            ? const Icon(Icons.check, size: 18, color: AppColors.mutedGold)
+                            : null,
+                        onTap: () {
+                          ref.read(settingsProvider.notifier).setLocale(code);
+                          Navigator.of(ctx).pop();
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ),
               ],
             ),
           ),
